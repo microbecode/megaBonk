@@ -1,0 +1,32 @@
+.intro-container {
+  border-radius: 20px;
+
+  .intro-text {
+    max-width: 470px;
+  }
+}
+
+.feature-container {
+  border-radius: 20px;
+  max-width: 570px;
+  height: 130px;
+
+  .feature-img {
+    padding: 5px;
+    border-radius: 0 0 10px 10px;
+    width: 74px;
+    height: auto;
+  }
+
+  .purple {
+    background: #A381F4;
+  }
+
+  .pink {
+    background: #DF54FC;
+  }
+
+  .green {
+    background: #09D1B7;
+  }
+}

@@ -1,0 +1,19 @@
+.staking-container {
+  border-radius: 20px;
+
+  .form-group {
+    position: relative;
+
+    .max-text {
+      position: absolute;
+      display: inline-block;
+      bottom: 50%;
+      transform: translateY(50%);
+      margin: auto;
+      padding: 0;
+      right: 60px;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+}

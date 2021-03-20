@@ -1,0 +1,70 @@
+import React from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import Helper1 from "../../images/helper1.png";
+import Helper2 from "../../images/helper2.png";
+import Helper3 from "../../images/helper3.png";
+import Helper4 from "../../images/helper4.png";
+import Helper5 from "../../images/helper5.png";
+import Helper6 from "../../images/helper6.png";
+
+import { HelperItem } from "./HelperItem";
+
+import "../../styles/helpers.scss";
+
+export function Helpers() {
+  return (
+    <div className="bonked">
+      <div className="helpers-container theme-container text-center p-5 mt-5">
+        <Container fluid>
+          <Row>
+            <Col>
+              <h2 className="text-uppercase">Bonk helpers</h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <p>Our Team</p>
+            </Col>
+          </Row>
+          <Row className="justify-content-between mt-5">
+            <HelperItem
+              title="Seal Ze, Lvl 99"
+              desc="Artistic Direction & Development"
+              img={Helper1}
+            />
+
+            <HelperItem
+              title="Roy Blackstone, Lvl 4 of Hearts"
+              desc="Advisor, Investor, & Author"
+              img={Helper2}
+            />
+
+            <HelperItem
+              title="Keegan, Lvl 42"
+              desc="Community Advisor & Developer"
+              img={Helper3}
+            />
+
+            <HelperItem
+              title="Jay, Lvl 9000"
+              desc="Enigmatic Advisor"
+              img={Helper4}
+            />
+
+            <HelperItem
+              title="Andrei Mironovits, Lvl 2"
+              desc="Web Design, @ArkRide on Telegram"
+              img={Helper5}
+            />
+
+            <HelperItem
+              title="Sir Johnny of Gonzo, Lvl 69"
+              desc="Motion Graphics & Design"
+              img={Helper6}
+            />
+          </Row>
+        </Container>
+      </div>
+    </div>
+  );
+}

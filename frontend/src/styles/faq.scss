@@ -1,0 +1,23 @@
+.faq-container {
+    .card-header {
+        position: relative;
+        border-bottom: 0;
+
+        &::after {
+            content: "";
+            display: inline-block;
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            padding: 3px;
+            transition: .5s;
+            transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+        }
+
+        &.active::after {
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+        }
+    }
+}

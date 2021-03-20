@@ -1,0 +1,25 @@
+.helper-item-container {
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-text {
+    font-size: 0.7rem;
+    color: #09D1B7;
+  }
+
+  .img-container {
+    border-radius: 20px;
+    width: 300px;
+    height: 225px;
+    position: relative;
+    margin: auto;
+
+    img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+}

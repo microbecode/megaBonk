@@ -1,0 +1,23 @@
+.slogan-container {
+  .hero-title {
+    font-size: 6rem;
+    line-height: 6rem;
+    letter-spacing: 1px;
+    max-width: 470px;
+
+    span {
+      background: #a381f4;
+      background: linear-gradient(to bottom right, #a381f4 0%, #df54fc 46.31%, #40c9e8 100%);
+      background: -webkit-linear-gradient(to bottom right, #a381f4 0%, #df54fc 46.31%, #40c9e8 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .hero-img {
+    height: auto;
+    width: 100%;
+    //max-width: 1120px;
+  }
+}
