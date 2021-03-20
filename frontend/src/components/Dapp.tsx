@@ -35,11 +35,13 @@ import { NetworkErrorMessage } from "./NetworkErrorMessage";
 const HARDHAT_NETWORK_ID = "31337";
 const MAIN_NETWORK_ID = "1";
 const RINKEBY_NETWORK_ID = "4";
+const ROPSTEN_NETWORK_ID = "3";
 
 const SUPPORTED_NETWORK_IDS = [
   HARDHAT_NETWORK_ID,
   MAIN_NETWORK_ID,
   RINKEBY_NETWORK_ID,
+  ROPSTEN_NETWORK_ID
 ];
 
 // This is an error code that indicates that the user canceled a transaction
@@ -401,7 +403,7 @@ export class Dapp extends React.Component<{}, DappState> {
 
     this.setState({
       networkError:
-        "Please connect to the Metamask and choose one of the supported networks (Mainnet or Rinkeby).",
+        "Please connect to the Metamask and choose one of the supported networks (Mainnet, Ropsten or Rinkeby).",
     });
 
     return false;

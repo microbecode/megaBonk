@@ -111,11 +111,11 @@ async function main() {
   ).deployed();
   console.log("FarmController deployed to:", farmController.address);
 
-  await farmController.addFarm(token1.address);
-  await farmController.addFarm(token2.address);
-  await farmController.addFarm(token3.address);
-  await farmController.addFarm(token4.address);
-  await farmController.addFarm(token5.address);
+  await farmController.addFarm(token1.address, { gasLimit: 2000000} );
+  await farmController.addFarm(token2.address, { gasLimit: 2000000});
+  await farmController.addFarm(token3.address, { gasLimit: 2000000});
+  await farmController.addFarm(token4.address, { gasLimit: 2000000});
+  await farmController.addFarm(token5.address, { gasLimit: 2000000});
 
   await farmController.setRates([3, 3, 2, 1, 1]);
   //

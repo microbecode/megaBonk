@@ -5,19 +5,21 @@ import "@nomiclabs/hardhat-waffle";
 import "hardhat-typechain";
 import "@openzeppelin/hardhat-upgrades";
 
-const MNEMONIC = process.env.MNEMONIC;
-const INFURA_KEY = process.env.INFURA_KEY;
+const privKey = process.env.PRIVATE_KEY;
+const providerRopsten = process.env.PROVIDER_ROPSTEN;
 
-const needsInfura =
+const needsProvider =
   process.env.npm_config_argv &&
   (process.env.npm_config_argv.includes("rinkeby") ||
     process.env.npm_config_argv.includes("ropsten") ||
     process.env.npm_config_argv.includes("mainnet"));
 
-if ((!MNEMONIC || !INFURA_KEY) && needsInfura) {
-  console.error("Please set a mnemonic and infura key.");
+if ((!privKey || !providerRopsten) && needsProvider) {
+  console.error("Please set a private key and provider.");
   process.exit(0);
 }
+
+const privKeyExists = privKey as string;
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -29,6 +31,15 @@ const config: HardhatUserConfig = {
         version: "0.5.16",
       },
     ],
+  },
+  defaultNetwork: "hardhat",
+  networks: {
+    hardhat: {
+    },
+    ropsten: {
+      url: providerRopsten,
+      accounts: [privKeyExists]
+    }
   },
   // defaultNetwork: "hardhat",
   // networks: {
