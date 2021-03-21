@@ -1,5 +1,5 @@
 [build]
-  command = "CI='' react-scripts build"
+  command = "CI='' npm i && react-scripts build"
   publish = "build"
 
 [build.environment]
