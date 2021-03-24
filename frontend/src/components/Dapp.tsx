@@ -18,7 +18,6 @@ import { FAQ } from "./faq/FAQ";
 import { Header } from "./common/Header";
 import { Slogan } from "./slogan/Slogan";
 import { Intro } from "./intro/Intro";
-import { Staking } from "./staking/Staking";
 import { CreateNFT } from "./createNFT/CreateNFT";
 import { BinderNFT } from "./binderNFT/BinderNFT";
 import { Upgrade } from "./upgrade/Upgrade";
@@ -173,8 +172,6 @@ export class Dapp extends React.Component<{}, DappState> {
               <Intro />
 
               <Statistics />
-
-              <Staking />
 
               <CreateNFT />
 

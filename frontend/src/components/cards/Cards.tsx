@@ -31,7 +31,7 @@ export function Cards() {
               img={Card2}
             />
 
-            <CardNFT title="Lorem ipsum" desc="Here some text" img={Card3} />
+            <CardNFT title="MEGABONK Limited Edition" desc="The MEGABONK Limited Edition NFT" img={Card3} />
           </Row>
         </Container>
       </div>
