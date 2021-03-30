@@ -37,7 +37,7 @@ export function Footer() {
             <Row className="justify-content-center">
               <a
                 className="mr-3"
-                href="https://twitter.com/"
+                href="https://twitter.com/bonktoken"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -45,7 +45,7 @@ export function Footer() {
               </a>
               <a
                 className="mr-3"
-                href="https://medium.com/"
+                href="https://medium.com/bonktoken"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -53,7 +53,7 @@ export function Footer() {
               </a>
               <a
                 className="mr-3"
-                href="https://telegram.org/"
+                href="https://t.me/bonktoken"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -84,7 +84,7 @@ export function Footer() {
                 <img className="social-img" alt="social" src={twitch} />
               </a>
               <a
-                href="https://etherscan.io/"
+                href="https://etherscan.io/token/0xacfe45c352c902ae3a3f9b6bfe6ec994c5d791bf?a=0xc86201d5055375b18d44a4761293839af9cfae84"
                 target="_blank"
                 rel="noreferrer noopener"
               >

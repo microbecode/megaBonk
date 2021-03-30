@@ -28,37 +28,37 @@ export function Helpers() {
           </Row>
           <Row className="justify-content-between mt-5">
             <HelperItem
-              title="Seal Ze, Lvl 99"
+              title="Seal Ze"
               desc="Artistic Direction & Development"
               img={Helper1}
             />
 
             <HelperItem
-              title="Roy Blackstone, Lvl 4 of Hearts"
+              title="Roy Blackstone"
               desc="Advisor, Investor, & Author"
               img={Helper2}
             />
 
             <HelperItem
-              title="Keegan, Lvl 42"
+              title="Keegan"
               desc="Community Advisor & Developer"
               img={Helper3}
             />
 
             <HelperItem
-              title="Jay, Lvl 9000"
+              title="Jay"
               desc="Enigmatic Advisor"
               img={Helper4}
             />
 
             <HelperItem
-              title="Andrei Mironovits, Lvl 2"
+              title="Andrei Mironovits"
               desc="Web Design, @ArkRide on Telegram"
               img={Helper5}
             />
 
             <HelperItem
-              title="Sir Johnny of Gonzo, Lvl 69"
+              title="Sir Johnny of Gonzo"
               desc="Motion Graphics & Design"
               img={Helper6}
             />

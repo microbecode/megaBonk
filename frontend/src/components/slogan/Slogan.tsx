@@ -26,8 +26,8 @@ export function Slogan() {
                 </Row>
                 <Row>
                   <p>
-                    BONK is a community cryptocurrency project focusing on
-                    creating NFTs.
+                    BONK is a community cryptocurrency project focused on
+                    creating & minting NFTs.
                   </p>
                 </Row>
                 <Row className="justify-content-between">
