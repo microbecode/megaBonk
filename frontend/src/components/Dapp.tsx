@@ -175,7 +175,7 @@ export class Dapp extends React.Component<{}, DappState> {
 
               {/* <CreateNFT /> */}
 
-              <BinderNFT />
+              {/* <BinderNFT /> */}
 
               <Upgrade />
 
