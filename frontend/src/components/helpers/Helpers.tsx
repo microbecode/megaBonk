@@ -6,6 +6,9 @@ import Helper3 from "../../images/helper3.png";
 import Helper4 from "../../images/helper4.png";
 import Helper5 from "../../images/helper5.png";
 import Helper6 from "../../images/helper6.png";
+import Helper7 from "../../images/helper7.png";
+import Helper8 from "../../images/helper8.png";
+import Helper9 from "../../images/helper9.png";
 
 import { HelperItem } from "./HelperItem";
 
@@ -61,6 +64,26 @@ export function Helpers() {
               title="Sir Johnny of Gonzo"
               desc="Motion Graphics & Design"
               img={Helper6}
+            />
+
+
+
+<HelperItem
+              title="Augustin Durand"
+              desc="Art & Design"
+              img={Helper7}
+            />
+
+<HelperItem
+              title="Nawaal"
+              desc="Community Moderator & Support"
+              img={Helper8}
+            />
+
+<HelperItem
+              title="Cryptomemez"
+              desc="Art & Design"
+              img={Helper9}
             />
           </Row>
         </Container>
