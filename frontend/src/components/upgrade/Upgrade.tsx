@@ -87,7 +87,7 @@ export function Upgrade() {
           <Row>
             <Col>
               <a
-                href="https://bonktoken.medium.com/bonkv2-proposal-b6fc21180d24"
+                href="https://bonktoken.medium.com/migration-to-megabonk-bc1ffc5dd9d0"
                 target="_blank"
                 rel="noreferrer noopener"
                 className="my-auto text-decoration-underline"
