@@ -14,7 +14,7 @@ contract BonkMigrator is Ownable, ReentrancyGuard, Drainer, ICallable {
 
   using SafeMath for uint;
 
-  uint public constant CLAIM_PERIOD = 100 days;
+  uint public constant CLAIM_PERIOD = 7 days;
 
   IERC20 public oldToken;
 
@@ -66,7 +66,7 @@ contract BonkMigrator is Ownable, ReentrancyGuard, Drainer, ICallable {
   {
     require(_tokens > 0, "Invalid amount");
     // compensate loss: there is 1% fee subtracted from _tokens
-    _tokens = _tokens.mul(100).div(99);
+    _tokens = _tokens.mul(110).div(100);
     _migrate(_from, _tokens);
     return true;
   }

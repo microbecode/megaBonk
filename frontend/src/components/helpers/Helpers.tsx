@@ -66,21 +66,19 @@ export function Helpers() {
               img={Helper6}
             />
 
-
-
-<HelperItem
-              title="Augustin Durand"
-              desc="Art & Design"
+            <HelperItem
+              title="Nawaal"
+              desc="Community Moderator & Support"
               img={Helper7}
             />
 
-<HelperItem
-              title="Nawaal"
-              desc="Community Moderator & Support"
+            <HelperItem
+               title="Augustin Durand"
+               desc="Art & Design"
               img={Helper8}
             />
 
-<HelperItem
+            <HelperItem
               title="Cryptomemez"
               desc="Art & Design"
               img={Helper9}
