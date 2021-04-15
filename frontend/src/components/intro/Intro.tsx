@@ -27,11 +27,7 @@ export function Intro() {
               </Row>
               <Row className="intro-text">
                 <p className="mt-4">
-                  megaBONK’s vision for NFTs are to utilize them in a multifaceted
-                  way so users can create your own NFTs using megaBONK. These NFTs will come
-                  from professional artists being able to create commissioned
-                  pieces and the community being able to create their own
-                  designs & mint them into an NFT.
+                megaBONK’s vision for NFTs are to utilize them in a multifaceted way so users can create their own NFTs using megaBONK. These NFTs will come from professional artists being able to create commissioned pieces and the community being able to create their own designs & mint them into an NFT.
                 </p>
               </Row>
             </Container>

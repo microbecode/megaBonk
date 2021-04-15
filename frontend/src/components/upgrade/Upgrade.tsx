@@ -80,7 +80,7 @@ export function Upgrade() {
           <Row>
             <Col>
               <h1 className="text-uppercase">
-                Token Upgrade. <span className="bonk-txt">Bonk v2</span>
+              TOKEN MIGRATION ENDED APRIL 8TH. <span className="bonk-txt">Bonk v2</span>
               </h1>
             </Col>
           </Row>
