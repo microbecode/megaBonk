@@ -59,12 +59,12 @@ export function Slogan() {
                     <u>Add liquidity</u>
                   </a>
                   <a
-                    href="https://pools.fyi/"
+                    href="https://rarible.com/megabonk?tab=collectibles"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="my-auto text-decoration-underline"
                   >
-                    <u>Pools.fyi</u>
+                    <u>Rarible</u>
                   </a>
                 </Row>
               </Container>

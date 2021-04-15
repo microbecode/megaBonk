@@ -66,7 +66,7 @@ export function Header({ connectWallet, selectedAddress }: Props) {
                     stake
                   </NavHashLink>
                   <a
-                    href="https://app.uniswap.org/"
+                    href="https://app.uniswap.org/#/add/0xacfe45c352c902ae3a3f9b6bfe6ec994c5d791bf/ETH"
                     target="_blank"
                     className="mx-2 nav-link"
                     rel="noopener noreferrer"
