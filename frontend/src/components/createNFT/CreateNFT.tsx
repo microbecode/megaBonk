@@ -34,6 +34,10 @@ export function CreateNFT() {
     setImg(e?.target?.result);
   };
 
+  const handleSubmit = async () => {
+    
+  }
+
   return (
     <div className="bonked">
       <div className="create-container pt-5 pb-0 px-5" id="createnft">
@@ -92,6 +96,7 @@ export function CreateNFT() {
                       variant="primary-outline"
                       type="submit"
                       className="bonk-btn arrow"
+                      onClick={handleSubmit}
                     >
                       Create
                     </Button>
