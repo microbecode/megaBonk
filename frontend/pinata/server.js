@@ -14,7 +14,7 @@ const app = express();
 const whitelist = [
     'https://bonktoken.com',
     'http://localhost:8888',
-    'https://localhost:8888'
+    'http://localhost:3000'
 ];
 
 const corsOptions = {
@@ -45,7 +45,7 @@ app.get('/api', (req, res) => {
 });
 
 app.post('/api/pinFile', cors(corsOptions), (req, res, next) => {
-    console.log('REQUEST', req.headers)
+    console.log('REQUEST', req)
     const form = formidable({multiples: false});
     form.parse(req, (err, fields, files) => {
         if (err) {

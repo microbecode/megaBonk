@@ -2,12 +2,13 @@ import React, { useRef, useState } from "react";
 import sampleNFT from "../../images/nft_sample.png";
 import transparentImg from "../../images/transparent.png";
 import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
-
 import "../../styles/createNFT.scss";
+import axios from "axios";
 
 export function CreateNFT() {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [img, setImg] = useState(null);
+  const [imgFile, setImgFile] = useState(null);
 
   const handleFileUpload = (e: any) => {
     if (hiddenFileInput?.current !== null) {
@@ -25,17 +26,24 @@ export function CreateNFT() {
       setImg(null);
       return;
     }
+    setImg(fileUploaded)
     const reader = new FileReader();
     reader.onload = imageIsLoaded;
     reader.readAsDataURL(fileUploaded);
   };
 
-  const imageIsLoaded = (e: any) => {
-    setImg(e?.target?.result);
-  };
+   const imageIsLoaded = (e: any) => {
+    console.log('loaded', e)
+    setImgFile(e?.target?.result);
+  }; 
 
-  const handleSubmit = async () => {
-    
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = "http://localhost:9000/api/pinFile"
+    const formData = new FormData(); 
+    formData.append('file', img);
+    //formData.append('file', e?.target?.result);
+      axios.post(url, formData);  
   }
 
   return (
@@ -81,7 +89,7 @@ export function CreateNFT() {
                 <div className="position-relative">
                   <p className="upload-label">Upload image</p>
                   <Image
-                    src={img || transparentImg}
+                    src={imgFile || transparentImg}
                     alt="Uploaded image"
                     className="upload-img"
                     onClick={handleFileUpload}

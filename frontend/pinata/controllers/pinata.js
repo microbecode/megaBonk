@@ -4,8 +4,8 @@ const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
 
-const PINATA_API_KEY = '808d839ccdb4aed66663';
-const PINATA_SECRET_API_KEY = '771b7ce10243dc46b65de9c3ddfaed62cff3885390ee89eefe2da2fe7117a40d';
+const PINATA_API_KEY = process.env.PINATA_API_KEY;
+const PINATA_SECRET_API_KEY = process.env.PINATA_SECRET_API_KEY;
 
 const pinFileToIPFS = (req, res, files) => {
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
@@ -33,7 +33,7 @@ const pinFileToIPFS = (req, res, files) => {
         console.log("pinFileToIPFS success", response.data.IpfsHash);
         res.status(200).send(response.data.IpfsHash);
     }).catch(function (error) {
-        console.log(error.message);
+        console.log("ERR", error, error.message);
         res.status(500).json({error: error.message});
     });
 };
