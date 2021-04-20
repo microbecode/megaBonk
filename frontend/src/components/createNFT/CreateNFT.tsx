@@ -6,6 +6,8 @@ import "../../styles/createNFT.scss";
 import axios from "axios";
 
 export function CreateNFT() {
+  const baseUrl = 'http://localhost:9000';
+
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [img, setImg] = useState(null);
   const [imgFile, setImgFile] = useState(null);
@@ -33,17 +35,43 @@ export function CreateNFT() {
   };
 
    const imageIsLoaded = (e: any) => {
-    console.log('loaded', e)
     setImgFile(e?.target?.result);
   }; 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const url = "http://localhost:9000/api/pinFile"
+
+    const json = {
+      name: e.currentTarget['nftName'].value,
+      description: e.currentTarget['nftDesc'].value,
+      image: null,
+      external_url: 'https://megabonk.com',
+      attributes: []
+    } ;
+
+    
+    const fileUrl = baseUrl + '/api/pinFile';
+    const jsonUrl = baseUrl + '/api/pinJSON';
+
     const formData = new FormData(); 
     formData.append('file', img);
-    //formData.append('file', e?.target?.result);
-      axios.post(url, formData);  
+
+    const imageResponse = await axios.post(fileUrl, formData); 
+
+    json.image = 'https://ipfs.io/ipfs/' + imageResponse.data;
+  
+    const str = JSON.stringify(json);
+    console.log("JSON", str);
+
+    const jsonResponse = await axios.post(
+      jsonUrl,
+      str,
+      {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      });
+
+    console.log('json response hash', jsonResponse.data);
   }
 
   return (
@@ -66,7 +94,7 @@ export function CreateNFT() {
           </Row>
           <Row>
             <Col className="col-12 col-md-6">
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="nftName">
                   <Form.Control type="text" placeholder="NFT name" required />
                 </Form.Group>
@@ -104,7 +132,6 @@ export function CreateNFT() {
                       variant="primary-outline"
                       type="submit"
                       className="bonk-btn arrow"
-                      onClick={handleSubmit}
                     >
                       Create
                     </Button>

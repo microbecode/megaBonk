@@ -11,10 +11,7 @@ const pinFileToIPFS = (req, res, files) => {
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
     const file = files.file;
-    console.log('USED PATH', file.path)
     const f = fs.createReadStream(file.path);
-
-    
 
     let data = new FormData();
     data.append('file', f);
@@ -33,7 +30,7 @@ const pinFileToIPFS = (req, res, files) => {
         console.log("pinFileToIPFS success", response.data.IpfsHash);
         res.status(200).send(response.data.IpfsHash);
     }).catch(function (error) {
-        console.log("ERR", error, error.message);
+        console.log("pinFileToIPFS error", error, error.message);
         res.status(500).json({error: error.message});
     });
 };
@@ -49,7 +46,8 @@ const pinJSONToIPFS = (req, res) => {
             {
                 headers: {
                     'pinata_api_key': PINATA_API_KEY,
-                    'pinata_secret_api_key': PINATA_SECRET_API_KEY
+                    'pinata_secret_api_key': PINATA_SECRET_API_KEY,
+                    'Content-Type': 'application/json'
                 }
             }
         ).then(function (response) {
@@ -57,7 +55,7 @@ const pinJSONToIPFS = (req, res) => {
             res.status(200).send(response.data.IpfsHash);
         })
         .catch(function (error) {
-            console.log(error.message);
+            console.log("pinJSONToIPFS fail", error.message);
             res.status(500).json({error: error.message});
         });
 };

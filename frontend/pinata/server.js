@@ -13,13 +13,13 @@ const app = express();
 
 const whitelist = [
     'https://bonktoken.com',
+    'https://megabonk.com',
     'http://localhost:8888',
     'http://localhost:3000'
 ];
 
 const corsOptions = {
     origin: function (origin, callback) {
-        console.log('origin', origin, !origin)
         if (whitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {
@@ -45,7 +45,6 @@ app.get('/api', (req, res) => {
 });
 
 app.post('/api/pinFile', cors(corsOptions), (req, res, next) => {
-    console.log('REQUEST', req)
     const form = formidable({multiples: false});
     form.parse(req, (err, fields, files) => {
         if (err) {
@@ -54,7 +53,6 @@ app.post('/api/pinFile', cors(corsOptions), (req, res, next) => {
             res.status(500).json({error: error});
             return;
         }
-        console.log('found files', files)
         pinataController.pinFileToIPFS(req, res, files);
     });
 });
