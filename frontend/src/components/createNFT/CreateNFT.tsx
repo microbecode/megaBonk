@@ -1,9 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import sampleNFT from "../../images/nft_sample.png";
 import transparentImg from "../../images/transparent.png";
 import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import "../../styles/createNFT.scss";
 import axios from "axios";
+import { ContractsContext, Web3Context } from "../../contexts/Context";
+import { ethers } from "ethers";
 
 export function CreateNFT() {
   const baseUrl = 'http://localhost:9000';
@@ -11,6 +13,32 @@ export function CreateNFT() {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [img, setImg] = useState(null);
   const [imgFile, setImgFile] = useState(null);
+  const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+  const [toggleUpdate, setToggleUpdate] = useState(false);
+
+  const {
+    contractBonkNFTMinter,
+    contractBonkToken
+  } = useContext(ContractsContext);
+  const { selectedAddress, decimals } = useContext(Web3Context);
+
+  const loadBalances = useCallback(async () => {
+    if (
+      !selectedAddress ||
+      !contractBonkToken ||
+      !decimals
+    )
+      return;
+
+      console.log('bal of', selectedAddress)
+    const bonkBalance = await contractBonkToken.balanceOf(selectedAddress);
+    setBalance(bonkBalance);
+  }, [selectedAddress, contractBonkToken, decimals]);
+
+  useEffect(() => {
+    loadBalances();
+  }, [loadBalances, toggleUpdate]);
+
 
   const handleFileUpload = (e: any) => {
     if (hiddenFileInput?.current !== null) {
@@ -39,6 +67,14 @@ export function CreateNFT() {
   }; 
 
   const handleSubmit = async (e) => {
+
+    const oneToken = ethers.utils.parseUnits("1", 18);
+    if (balance.lt(oneToken)) {
+      alert("Not enough balance, you only have " + balance.toString());
+      return;
+    }
+
+    console.log('balance', balance.toString())
 
     const json = {
       name: e.currentTarget['nftName'].value,
@@ -71,7 +107,38 @@ export function CreateNFT() {
         }
       });
 
-    console.log('json response hash', jsonResponse.data);
+    console.log('json response hash', jsonResponse.data); 
+
+    //const payload = ethers.utils.toUtf8Bytes ('https://ipfs.io/ipfs/QmVTKJh9a2L8uYg4UVhUG3wS39U59d2LdY2R2mNnk49LzY');
+    const payload = ethers.utils.toUtf8Bytes (jsonResponse.data);
+
+    //console.log('payload', payload)
+
+    const balanceBefore = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
+    console.log('balance before', balanceBefore.toString());
+    
+    
+    //console.log('token uri', (await contractBonkNFTMinter.tokenURI(1)).toString());
+    console.log('one token', oneToken.toString())
+    
+    const tx = await contractBonkToken.transferAndCall(
+      contractBonkNFTMinter.address,
+      oneToken,
+      payload,
+      { from: selectedAddress },
+    );
+    await tx.wait();
+
+    const balanceAfter = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
+
+    const latestUrl = await contractBonkNFTMinter.tokenURI(parseInt(balanceAfter.toString()) - 1);
+
+console.log('latest url ', 'https://ipfs.io/ipfs/' + latestUrl);
+    
+    console.log('balance after', balanceAfter.toString());
+
+
+    setToggleUpdate(!toggleUpdate);
   }
 
   return (
@@ -102,7 +169,7 @@ export function CreateNFT() {
                   <Form.Control
                     type="text"
                     placeholder="Enter description"
-                    required
+                    required 
                   />
                 </Form.Group>
                 <Form.Group controlId="nftImg">

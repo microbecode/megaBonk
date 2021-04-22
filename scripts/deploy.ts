@@ -55,8 +55,8 @@ async function main() {
 
   // Enable transfers
   await bonkToken.enableTransfers();
-  const sendToMigrator = await bonkToken.balanceOf(owner);
-  await bonkToken.transfer(bonkMigrator.address, sendToMigrator);
+  /* const sendToMigrator = await bonkToken.balanceOf(owner);
+  await bonkToken.transfer(bonkMigrator.address, sendToMigrator); */
 
   // NFT minter
   const MINT_FEE = ethers.utils.parseUnits("1", 18); // 1 BONK fee

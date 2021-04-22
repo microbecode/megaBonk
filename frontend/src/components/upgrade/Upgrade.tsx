@@ -9,7 +9,7 @@ export function Upgrade() {
   const [toggleUpdate, setToggleUpdate] = useState(false);
 
   const {
-    contractBonkMigrator,
+    contractBonkNFTMinter,
     contractBonkToken,
     contractBonkTokenOld,
   } = useContext(ContractsContext);
@@ -47,7 +47,7 @@ export function Upgrade() {
 
   const onMigrateClick = async (e: any) => {
     e.preventDefault();
-    if (contractBonkTokenOld && contractBonkMigrator && selectedAddress) {
+    if (contractBonkTokenOld && contractBonkNFTMinter && selectedAddress) {
       try {
         const oldBonkBalance = await contractBonkTokenOld.balanceOf(
           selectedAddress,
@@ -58,7 +58,7 @@ export function Upgrade() {
           return;
         }
         const tx = await contractBonkTokenOld.transferAndCall(
-          contractBonkMigrator.address,
+          contractBonkNFTMinter.address,
           oldBonkBalance,
           0x0,
           { from: selectedAddress },
