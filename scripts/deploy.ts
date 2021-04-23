@@ -66,7 +66,7 @@ async function main() {
     "Bonk NFT Minter",
     "BONK NFT",
     bonkTokenOld.address,
-    owner,
+    bonkTokenOld.address, // just set the fee receiver to be anything else than the owner
     MINT_FEE,
   );
   await bonkNftMinter.deployed();

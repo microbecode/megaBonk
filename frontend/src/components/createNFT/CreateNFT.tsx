@@ -30,8 +30,9 @@ export function CreateNFT() {
     )
       return;
 
-      console.log('bal of', selectedAddress)
     const bonkBalance = await contractBonkToken.balanceOf(selectedAddress);
+    console.log('my address ' + selectedAddress + ' has tokens: ' + bonkBalance.toString())
+
     setBalance(bonkBalance);
   }, [selectedAddress, contractBonkToken, decimals]);
 
@@ -67,7 +68,7 @@ export function CreateNFT() {
   }; 
 
   const handleSubmit = async (e) => {
-
+    e.preventDefault();
     const oneToken = ethers.utils.parseUnits("1", 18);
     if (balance.lt(oneToken)) {
       alert("Not enough balance, you only have " + balance.toString());
