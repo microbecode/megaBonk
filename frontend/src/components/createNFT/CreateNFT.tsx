@@ -8,7 +8,7 @@ import { ContractsContext, Web3Context } from "../../contexts/Context";
 import { ethers } from "ethers";
 
 export function CreateNFT() {
-  const baseUrl = 'http://localhost:9000';
+  const baseUrl = 'https://bonk-pinata.herokuapp.com';
 
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [img, setImg] = useState(null);
@@ -85,9 +85,17 @@ export function CreateNFT() {
       attributes: []
     } ;
 
+    const getBaseUrl = () => {
+      // http://localhost:9000
+      if (window.location.href.indexOf('localhost') > -1) {
+        return 'http://localhost:9000';
+      }
+      return baseUrl;
+    }
+
     
-    const fileUrl = baseUrl + '/api/pinFile';
-    const jsonUrl = baseUrl + '/api/pinJSON';
+    const fileUrl = getBaseUrl() + '/api/pinFile';
+    const jsonUrl = getBaseUrl() + '/api/pinJSON';
 
     const formData = new FormData(); 
     formData.append('file', img);

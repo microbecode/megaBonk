@@ -14,19 +14,21 @@ const app = express();
 const whitelist = [
     'https://bonktoken.com',
     'https://megabonk.com',
-    'http://localhost:8888',
-    'http://localhost:3000'
+    'https://megabonktest.netlify.app'
 ];
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
+var corsOptions = function (req, callback) {
+    var corsOptions;
+    const origin = req.header('Origin');
+    // Allow if in whitelist or if this server itself is running in localhost
+    if (whitelist.indexOf(origin) !== -1 || req.get('host').indexOf('localhost') > -1) {
+      corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+    } else {
+      callback(new Error('Not allowed by CORS'));
+      return;
     }
-};
+    callback(null, corsOptions) // callback expects two parameters: error and options
+  }
 
 app.use(helmet());
 app.use(cors());
