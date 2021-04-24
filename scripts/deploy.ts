@@ -1,6 +1,7 @@
 import { ethers, network, artifacts, upgrades } from "hardhat";
 import * as fs from "fs";
-import { Contract } from "ethers";
+import { BigNumber, Contract } from "ethers";
+const hre = require("hardhat");
 
 // This is a script for deploying your contracts. You can adapt it to deploy
 // yours, or create new ones.
@@ -61,13 +62,17 @@ async function main() {
   // NFT minter
   const MINT_FEE = ethers.utils.parseUnits("1", 18); // 1 BONK fee
 
-  const BonkNftMinter = await ethers.getContractFactory("BonkNftMinter");
-  const bonkNftMinter = await BonkNftMinter.deploy(
+  const bonkNftMinterArgs = [
     "Bonk NFT Minter",
     "BONK NFT",
-    bonkTokenOld.address,
-    bonkTokenOld.address, // just set the fee receiver to be anything else than the owner
+    bonkToken.address,
+    bonkToken.address, // just set the fee receiver to be anything else than the owner
     MINT_FEE,
+  ];
+
+  const BonkNftMinter = await ethers.getContractFactory("BonkNftMinter");
+  const bonkNftMinter = await BonkNftMinter.deploy(
+    ...bonkNftMinterArgs
   );
   await bonkNftMinter.deployed();
   console.log("BonkNftMinter address:", bonkNftMinter.address);
@@ -134,7 +139,7 @@ async function main() {
   console.log("DONE");
 
   // We also save the contract artifacts and addresses in the frontend directory
-  saveFrontendFiles(
+  await saveFrontendFiles(
     bonkTokenOld,
     bonkToken,
     bonkMigrator,
@@ -146,9 +151,11 @@ async function main() {
     token5, 
     farmController, */
   );
+
+ // await verifyContracts(bonkNftMinter, bonkNftMinterArgs);
 }
 
-function saveFrontendFiles(
+async function saveFrontendFiles(
   bonkTokenOld: Contract,
   bonkToken: Contract,
   bonkMigrator: Contract,
@@ -224,7 +231,24 @@ function saveFrontendFiles(
     contractsDir + "/LPFarm.json",
     JSON.stringify(LPFarmArtifact, null, 2),
   ); */
+
+  
+  
 }
+
+const verifyContracts = async (
+  bonkNftMinter: Contract,
+  bonkNftMinterArgs: (string | BigNumber)[],
+) => {
+  if (network.name !== "hardhat") {
+    await hre.run("verify:verify", {
+      address: bonkNftMinter.address,
+      constructorArguments: bonkNftMinterArgs,
+    })
+  }
+}
+  
+
 
 main()
   .then(() => process.exit(0))

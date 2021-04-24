@@ -4,6 +4,7 @@ import { HardhatUserConfig } from "hardhat/types";
 import "@nomiclabs/hardhat-waffle";
 import "hardhat-typechain";
 import "@openzeppelin/hardhat-upgrades";
+import "@nomiclabs/hardhat-etherscan";
 
 const privKey = process.env.PRIVATE_KEY;
 const providerRopsten = process.env.PROVIDER_ROPSTEN;
@@ -41,6 +42,9 @@ const config: HardhatUserConfig = {
       accounts: [privKeyExists]
     }
   },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY
+  }
   // defaultNetwork: "hardhat",
   // networks: {
   //   localhost: {
