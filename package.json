@@ -8,6 +8,7 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "deploy-local": "npx hardhat --network localhost run scripts/deploy.ts",
+    "deploy-ropsten": "npx hardhat --network ropsten run scripts/deploy.ts",
     "localchain": "npx hardhat node",
     "test": "npx hardhat test",
     "format": "prettier --write **/*.ts{,x}",

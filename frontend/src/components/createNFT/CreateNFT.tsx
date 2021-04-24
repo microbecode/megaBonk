@@ -90,9 +90,11 @@ export function CreateNFT() {
       if (window.location.href.indexOf('localhost') > -1) {
         return 'http://localhost:9000';
       }
+      if (window.location.href.indexOf('megabonktest.netlify.app') > -1) {
+        return 'https://39720d9271a9.ngrok.io';
+      }
       return baseUrl;
     }
-
     
     const fileUrl = getBaseUrl() + '/api/pinFile';
     const jsonUrl = getBaseUrl() + '/api/pinJSON';

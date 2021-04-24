@@ -76,6 +76,7 @@ async function main() {
   const NEW_FEE = ethers.utils.parseUnits("99", 16); // 0.99 BONK fee
   await bonkNftMinter.setBonkFee(NEW_FEE);
 
+  /*
   // Deploy staking contracts
   const MockERC20 = await ethers.getContractFactory("MockERC20");
 
@@ -129,7 +130,7 @@ async function main() {
   );
   await bonkToken.approve(farmController.address, INITIAL_REWARDS);
   await farmController.notifyRewards(INITIAL_REWARDS);
-
+*/
   console.log("DONE");
 
   // We also save the contract artifacts and addresses in the frontend directory
@@ -138,12 +139,12 @@ async function main() {
     bonkToken,
     bonkMigrator,
     bonkNftMinter,
-    token1,
+/*     token1,
     token2,
     token3,
     token4,
-    token5,
-    farmController,
+    token5, 
+    farmController, */
   );
 }
 
@@ -152,12 +153,12 @@ function saveFrontendFiles(
   bonkToken: Contract,
   bonkMigrator: Contract,
   bonkNftMinter: Contract,
-  token1: Contract,
+/*   token1: Contract,
   token2: Contract,
   token3: Contract,
   token4: Contract,
   token5: Contract,
-  farmController: Contract,
+  farmController: Contract, */
 ) {
   const contractsDir = __dirname + "/../frontend/src/contracts";
 
@@ -173,12 +174,12 @@ function saveFrontendFiles(
         BonkToken: bonkToken.address,
         BonkMigrator: bonkMigrator.address,
         BonkNftMinter: bonkNftMinter.address,
-        Token1: token1.address,
+/*         Token1: token1.address,
         Token2: token2.address,
         Token3: token3.address,
         Token4: token4.address,
         Token5: token5.address,
-        FarmController: farmController.address,
+        FarmController: farmController.address, */
       },
       undefined,
       2,
@@ -191,9 +192,9 @@ function saveFrontendFiles(
 
   const BonkNftMinterArtifact = artifacts.readArtifactSync("BonkNftMinter");
 
-  const MockERC20Artifact = artifacts.readArtifactSync("MockERC20");
+/*   const MockERC20Artifact = artifacts.readArtifactSync("MockERC20");
   const FarmControllerArtifact = artifacts.readArtifactSync("FarmController");
-  const LPFarmArtifact = artifacts.readArtifactSync("LPFarm");
+  const LPFarmArtifact = artifacts.readArtifactSync("LPFarm"); */
 
   fs.writeFileSync(
     contractsDir + "/BonkTokenOld.json",
@@ -211,7 +212,7 @@ function saveFrontendFiles(
     contractsDir + "/BonkNftMinter.json",
     JSON.stringify(BonkNftMinterArtifact, null, 2),
   );
-  fs.writeFileSync(
+/*   fs.writeFileSync(
     contractsDir + "/MockERC20Artifact.json",
     JSON.stringify(MockERC20Artifact, null, 2),
   );
@@ -222,7 +223,7 @@ function saveFrontendFiles(
   fs.writeFileSync(
     contractsDir + "/LPFarm.json",
     JSON.stringify(LPFarmArtifact, null, 2),
-  );
+  ); */
 }
 
 main()
