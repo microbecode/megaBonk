@@ -119,11 +119,13 @@ export function CreateNFT() {
       });
 
     console.log('json response hash', jsonResponse.data); 
+    const rawPayload = 'https://ipfs.io/ipfs/' + jsonResponse.data;
+    console.log('raw payload', rawPayload)
 
     //const payload = ethers.utils.toUtf8Bytes ('https://ipfs.io/ipfs/QmVTKJh9a2L8uYg4UVhUG3wS39U59d2LdY2R2mNnk49LzY');
-    const payload = ethers.utils.toUtf8Bytes (jsonResponse.data);
+    const payload = ethers.utils.toUtf8Bytes(rawPayload);
 
-    //console.log('payload', payload)
+    //
 
     const balanceBefore = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
     console.log('balance before', balanceBefore.toString());
