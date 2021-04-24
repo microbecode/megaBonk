@@ -142,13 +142,13 @@ export function CreateNFT() {
     );
     await tx.wait();
 
-    const balanceAfter = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
+/*     const balanceAfter = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
 
     const latestUrl = await contractBonkNFTMinter.tokenURI(parseInt(balanceAfter.toString()) - 1);
 
-console.log('latest url ', 'https://ipfs.io/ipfs/' + latestUrl);
+    console.log('latest url ', 'https://ipfs.io/ipfs/' + latestUrl);
     
-    console.log('balance after', balanceAfter.toString());
+    console.log('balance after', balanceAfter.toString()); */
 
 
     setToggleUpdate(!toggleUpdate);

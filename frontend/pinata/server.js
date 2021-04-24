@@ -17,7 +17,18 @@ const whitelist = [
     'https://megabonktest.netlify.app'
 ];
 
-var corsOptions = function (req, callback) {
+/*
+const corsOptions3 = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}; */
+
+var corsOptions = function (req, callback) {    
     var corsOptions;
     const origin = req.header('Origin');
     // Allow if in whitelist or if this server itself is running in localhost
