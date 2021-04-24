@@ -90,9 +90,9 @@ export function CreateNFT() {
       if (window.location.href.indexOf('localhost') > -1) {
         return 'http://localhost:9000';
       }
-      if (window.location.href.indexOf('megabonktest.netlify.app') > -1) {
+    /*   if (window.location.href.indexOf('megabonktest.netlify.app') > -1) {
         return 'https://44cbe8b53b57.ngrok.io';
-      }
+      } */
       return baseUrl;
     }
     
