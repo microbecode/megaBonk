@@ -91,7 +91,7 @@ export function CreateNFT() {
         return 'http://localhost:9000';
       }
       if (window.location.href.indexOf('megabonktest.netlify.app') > -1) {
-        return 'https://39720d9271a9.ngrok.io';
+        return 'https://44cbe8b53b57.ngrok.io';
       }
       return baseUrl;
     }
