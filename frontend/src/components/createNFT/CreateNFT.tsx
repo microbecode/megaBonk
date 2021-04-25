@@ -79,6 +79,11 @@ export function CreateNFT() {
       return;
     }
 
+    if (!img) {
+      alert("Please add a picture");
+      return;
+    }
+
     console.log('balance', balance.toString())
 
     const json = {
