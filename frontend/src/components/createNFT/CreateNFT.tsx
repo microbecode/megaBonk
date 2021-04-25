@@ -6,6 +6,8 @@ import "../../styles/createNFT.scss";
 import axios from "axios";
 import { ContractsContext, Web3Context } from "../../contexts/Context";
 import { ethers } from "ethers";
+import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
+import { Notification } from "../Notification";
 
 export function CreateNFT() {
   const baseUrl = 'https://bonk-pinata.herokuapp.com';
@@ -15,6 +17,8 @@ export function CreateNFT() {
   const [imgFile, setImgFile] = useState(null);
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
+  const [waitHash, setWaitHash] = useState<string>(null);
+  const [successText, setSuccessText] = useState<string>(null);
 
   const {
     contractBonkNFTMinter,
@@ -125,10 +129,8 @@ export function CreateNFT() {
     //const payload = ethers.utils.toUtf8Bytes ('https://ipfs.io/ipfs/QmVTKJh9a2L8uYg4UVhUG3wS39U59d2LdY2R2mNnk49LzY');
     const payload = ethers.utils.toUtf8Bytes(rawPayload);
 
-    //
-
-    const balanceBefore = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
-    console.log('balance before', balanceBefore.toString());
+/*     const balanceBefore = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
+    console.log('balance before', balanceBefore.toString()); */
     
     
     //console.log('token uri', (await contractBonkNFTMinter.tokenURI(1)).toString());
@@ -140,7 +142,11 @@ export function CreateNFT() {
       payload,
       { from: selectedAddress },
     );
+    setWaitHash(tx.hash);
+    console.log('tx', tx)
     await tx.wait();
+    setWaitHash(null);
+    setSuccessText("Congratulations! You have received an NFT at your address " + selectedAddress);
 
 /*     const balanceAfter = await contractBonkNFTMinter.balanceOf('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266');
 
@@ -156,6 +162,8 @@ export function CreateNFT() {
 
   return (
     <div className="bonked">
+      {waitHash && <WaitingForTransactionMessage txHash={waitHash}></WaitingForTransactionMessage> }
+      {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="createnft">
         <Container fluid>
           <Row>
