@@ -4,7 +4,7 @@
 module.exports = [
     "Bonk NFT Minter", 
     "BONK NFT",
-    "0x17558d706b99229a3C3BaD9c52d49f2DD4CDB114",
-    "0x17558d706b99229a3C3BaD9c52d49f2DD4CDB114",
-    "1000000000000000000"
+    "0xacfe45c352c902ae3a3f9b6bfe6ec994c5d791bf", // bonktoken
+    "0x4CB22371F39f7333A59D20cCa6a92B29DD7dc298", // fee collector
+    "1000000000000000000" // fee
   ];
