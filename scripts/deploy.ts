@@ -152,7 +152,7 @@ async function main() {
     farmController, */
   );
 
- // await verifyContracts(bonkNftMinter, bonkNftMinterArgs);
+  await verifyContracts(bonkNftMinter, bonkNftMinterArgs);
 }
 
 async function saveFrontendFiles(
@@ -241,10 +241,16 @@ const verifyContracts = async (
   bonkNftMinterArgs: (string | BigNumber)[],
 ) => {
   if (network.name !== "hardhat") {
+    console.log('Waiting for the contract to be distributed in Etherscan...')
+    const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
+    await delay(30000);
+    
     await hre.run("verify:verify", {
       address: bonkNftMinter.address,
       constructorArguments: bonkNftMinterArgs,
     })
+    console.log('Verification done')
+    
   }
 }
   
