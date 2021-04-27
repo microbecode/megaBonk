@@ -5,7 +5,7 @@ import { Container } from "react-bootstrap";
 import contractAddress from "../contracts/contract-address.json";
 import BonkTokenOldArtifact from "../contracts/BonkTokenOld.json";
 import BonkTokenArtifact from "../contracts/BonkToken.json";
-import BonkMigratorArtifact from "../contracts/BonkMigrator.json";
+import BonkNftMinterArtifact from "../contracts/BonkNftMinter.json";
 
 import { ContractsContext, Web3Context } from "../contexts/Context";
 
@@ -20,7 +20,6 @@ import { Slogan } from "./slogan/Slogan";
 import { Intro } from "./intro/Intro";
 import { CreateNFT } from "./createNFT/CreateNFT";
 import { BinderNFT } from "./binderNFT/BinderNFT";
-import { Upgrade } from "./upgrade/Upgrade";
 import { Cards } from "./cards/Cards";
 import { Helpers } from "./helpers/Helpers";
 import { Copyright } from "./common/Copyright";
@@ -88,7 +87,7 @@ type DappState = {
   isProcessing?: boolean;
   bonkTokenOld?: ethers.Contract;
   bonkToken?: ethers.Contract;
-  bonkMigrator?: ethers.Contract;
+  bonkNFTMinter?: ethers.Contract;
 };
 
 export class Dapp extends React.Component<{}, DappState> {
@@ -122,12 +121,12 @@ export class Dapp extends React.Component<{}, DappState> {
       isProcessing,
       bonkTokenOld,
       bonkToken,
-      bonkMigrator,
+      bonkNFTMinter,
     } = this.state;
 
     const contractBonkTokenOld = bonkTokenOld;
     const contractBonkToken = bonkToken;
-    const contractBonkMigrator = bonkMigrator;
+    const contractBonkNFTMinter = bonkNFTMinter;
 
     return (
       <div>
@@ -141,7 +140,7 @@ export class Dapp extends React.Component<{}, DappState> {
             value={{
               contractBonkTokenOld,
               contractBonkToken,
-              contractBonkMigrator,
+              contractBonkNFTMinter,
             }}
           >
             <Header
@@ -173,11 +172,9 @@ export class Dapp extends React.Component<{}, DappState> {
 
           {/*     <Statistics /> */}
 
-              {/* <CreateNFT /> */}
+              <CreateNFT />
 
               {/* <BinderNFT /> */}
-
-              <Upgrade />
 
               <Cards />
 
@@ -312,9 +309,9 @@ export class Dapp extends React.Component<{}, DappState> {
     });
 
     this.setState({
-      bonkMigrator: new ethers.Contract(
-        contractAddress.BonkMigrator,
-        BonkMigratorArtifact.abi,
+      bonkNFTMinter: new ethers.Contract(
+        contractAddress.BonkNftMinter,
+        BonkNftMinterArtifact.abi,
         this._provider.getSigner(0),
       ),
     });

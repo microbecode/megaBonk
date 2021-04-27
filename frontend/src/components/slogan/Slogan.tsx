@@ -15,14 +15,8 @@ export function Slogan() {
               <Container>
                 <Row>
                   <h1 className="hero-title text-uppercase m-0 mb-4">
-                    Time to get <span className="important-text">BONKED</span>
+                    Time to get <span className="important-text">MEGABONKED</span>
                   </h1>
-                </Row>
-                <Row>
-                  <p>
-                    BONK is proof of art &#38; NFTs combined with a
-                    decentralized volume dependent staking protocol.
-                  </p>
                 </Row>
                 <Row>
                   <p>
@@ -32,7 +26,7 @@ export function Slogan() {
                 </Row>
                 <Row className="justify-content-between">
                   <a
-                    href="https://app.uniswap.org/"
+                    href="https://info.uniswap.org/pair/0xcae496cf11cc0c2c78889bb171b4bbf33a459469"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -52,7 +46,7 @@ export function Slogan() {
                     </Button>{" "}
                   </NavHashLink>
                   <a
-                    href="https://app.uniswap.org/"
+                    href="https://app.uniswap.org/#/add/0xacfe45c352c902ae3a3f9b6bfe6ec994c5d791bf/ETH"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="my-auto text-decoration-underline"
@@ -60,12 +54,12 @@ export function Slogan() {
                     <u>Add liquidity</u>
                   </a>
                   <a
-                    href="https://pools.fyi/"
+                    href="https://rarible.com/megabonk?tab=collectibles"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="my-auto text-decoration-underline"
                   >
-                    <u>Pools.fyi</u>
+                    <u>Rarible</u>
                   </a>
                 </Row>
               </Container>

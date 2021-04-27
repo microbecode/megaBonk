@@ -8,6 +8,7 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "deploy-local": "npx hardhat --network localhost run scripts/deploy.ts",
+    "deploy-ropsten": "npx hardhat --network ropsten run scripts/deploy.ts",
     "localchain": "npx hardhat node",
     "test": "npx hardhat test",
     "format": "prettier --write **/*.ts{,x}",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-etherscan": "^2.1.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/hardhat-upgrades": "^1.6.0",
     "@typechain/ethers-v5": "^5.0.0",

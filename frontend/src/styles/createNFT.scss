@@ -1,8 +1,10 @@
 .create-container {
   .sampleNFT-img {
     height: auto;
-    width: 100%;
-    max-width: 596px;
+    max-height: 400px;
+    /* width: 100%; */
+  /*   max-width: 596px; */
+  object-fit: cover;
   }
 
   .upload-img {
