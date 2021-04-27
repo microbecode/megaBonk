@@ -20,14 +20,12 @@ export function Intro() {
               </Row>
               <Row className="intro-text">
                 <p className="mt-4">
-                  megaBonk is a decentralized erc20 token that was created on the
-                  Ethereum network & is a utility token that can be used to
-                  create NFTs.
+                megaBonk is a decentralized erc20 token that was created on the Ethereum network & is a utility token that can be used to create NFTs.
                 </p>
               </Row>
               <Row className="intro-text">
                 <p className="mt-4">
-                megaBONK’s vision for NFTs are to utilize them in a multifaceted way so users can create their own NFTs using megaBONK. These NFTs will come from professional artists being able to create commissioned pieces and the community being able to create their own designs & mint them into an NFT.
+                megaBONK’s vision for NFTs are to utilize them in a multifaceted way so users can create their own NFTs using megaBONK. Our NFTs come from professional artists, the team, and our amazing community.
                 </p>
               </Row>
             </Container>

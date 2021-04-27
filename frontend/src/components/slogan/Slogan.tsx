@@ -15,13 +15,8 @@ export function Slogan() {
               <Container>
                 <Row>
                   <h1 className="hero-title text-uppercase m-0 mb-4">
-                    Time to get <span className="important-text">BONKED</span>
+                    Time to get <span className="important-text">MEGABONKED</span>
                   </h1>
-                </Row>
-                <Row>
-                  <p>
-                  megaBONKED
-                  </p>
                 </Row>
                 <Row>
                   <p>
