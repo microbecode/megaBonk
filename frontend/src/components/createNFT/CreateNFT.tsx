@@ -179,9 +179,7 @@ export function CreateNFT() {
           <Row>
             <Col>
               <p className="text-center">
-                Create your own erc-721 NFTs. Will require 1 BONK + gas. Please
-                note that this DApp is still under it’s alpha/beta stage. Could
-                contain bugs, use at your own risk.
+                Create your own erc-721 NFTs. Will require 1 BONK + gas.
               </p>
             </Col>
           </Row>
