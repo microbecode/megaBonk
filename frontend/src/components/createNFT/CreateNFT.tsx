@@ -179,7 +179,7 @@ export function CreateNFT() {
           <Row>
             <Col>
               <p className="text-center">
-                Create your own erc-721 NFTs. Will require 1 BONK + gas.
+                Create your own erc-721 NFTs. Will require 1 megaBONK + gas.
               </p>
             </Col>
           </Row>
@@ -215,7 +215,7 @@ export function CreateNFT() {
                   />
                 </div>
                 <p>
-                  BONK fee: <span>1</span> mBonk
+                  BONK fee: <span>1</span> megaBONK
                 </p>
                 <Row>
                   <Col className="d-flex justify-content-between">
