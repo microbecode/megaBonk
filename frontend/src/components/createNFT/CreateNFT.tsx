@@ -215,7 +215,7 @@ export function CreateNFT() {
                   />
                 </div>
                 <p>
-                  BONK fee: <span>0</span>
+                  BONK fee: <span>1</span> mBonk
                 </p>
                 <Row>
                   <Col className="d-flex justify-content-between">
