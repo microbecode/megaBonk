@@ -7,11 +7,11 @@ import { expect } from "chai";
 
 describe("Farmer", function () {
   let accounts: SignerWithAddress[];
-  let minter : Contract;
-  let token : Contract;
+  let farm : Contract;
   let owner : SignerWithAddress;
   let notOwner : SignerWithAddress;
   const oneToken = ethers.utils.parseUnits("1", 18);
+  const zero = ethers.BigNumber.from("0");
 
   beforeEach(async function () {
     accounts = await ethers.getSigners();
@@ -41,6 +41,11 @@ describe("Farmer", function () {
     ).deployed();
 
     await farmController.addFarm(token1.address, { gasLimit: 2000000});
+
+    const farmAddr = await farmController.getFarm(0);
+    const FarmFactory = await ethers.getContractFactory("LPFarm");
+    farm = FarmFactory.attach(farmAddr);
+
     await farmController.setRates([3]);
     
     // Allocate 10% of total supply to the initial farms
@@ -57,15 +62,14 @@ describe("Farmer", function () {
     notOwner = accounts[1];
   });
 
-  it("hmm", async function () {
-/*     const tokenBalanceBefore = await token.balanceOf(owner);
-    await token.transferAndCall(
-      minter.address,
-      oneToken,
-      payload
-    );
-    const tokenBalanceAfter = await token.balanceOf(owner);
-    expect(tokenBalanceAfter).to.equal(tokenBalanceBefore.sub(oneToken)); */
+  it("Empty farm", async function () {
+    const earnedOwner = await farm.earned(owner.address); 
+    const earnedNonOwner = await farm.earned(notOwner.address); 
+    const rewardPerToken = await farm.rewardPerToken();
+    
+    expect(earnedOwner).to.equal(zero);
+    expect(earnedNonOwner).to.equal(zero);
+    expect(rewardPerToken).to.equal(zero);
   });
 
 });
