@@ -58,18 +58,18 @@ describe("Farmer", function () {
     const FarmFactory = await ethers.getContractFactory("LPFarm");
     farm = FarmFactory.attach(farmAddr);
 
-    await farmController.setRates([4]);
+    await farmController.setRates([1]);
     
 /*     // Allocate 10% of total supply to the initial farms
     const ownerBalance = await rewardToken.balanceOf(owner.address);
     const INITIAL_REWARDS = ownerBalance.div(10); */
 
     await rewardToken.approve(farmController.address, rewardTokenstotal);
-    await farmController.notifyRewards(rewardTokenstotal);
+    
     
     
   });
-/*
+
   it("Unstaked farm has no rewards", async function () {
     const earnedOwner = await farm.earned(owner.address); 
     const earnedNonOwner = await farm.earned(notOwner.address); 
@@ -85,7 +85,8 @@ describe("Farmer", function () {
     await expect(farm.withdraw(justAboveZero)).to.be.revertedWith('SafeMath: subtraction overflow');
     await expect(farm.exit()).to.be.revertedWith('Cannot withdraw 0');
   });
-  */
+  
+ 
   it("Withdrawing results in the same balance", async function () {
     const initialBalance = await stakeToken.balanceOf(owner.address);
     await stakeToken.approve(farm.address, oneToken);
@@ -98,40 +99,96 @@ describe("Farmer", function () {
     expect(middleBalance).to.equal(afterBalance.sub(oneToken));
   });
 
-  it("Staking gives rewards", async function () {
+  it("Staking gives rewards to two participants", async function () {
+    await farmController.notifyRewards(rewardTokenstotal);
 
-    console.log('farm balance',  (await rewardToken.balanceOf(farm.address)).toString());
+    //console.log('farm balance',  (await rewardToken.balanceOf(farm.address)).toString());
     const initialBalance = await rewardToken.balanceOf(notOwner.address);
     const initialStakeBalance = await stakeToken.balanceOf(notOwner.address);
 
     await stakeToken.connect(notOwner).approve(farm.address, oneToken);
     await farm.connect(notOwner).stake(oneToken);
 
-     await stakeToken.connect(notOwner2).approve(farm.address, oneToken);
+    await stakeToken.connect(notOwner2).approve(farm.address, oneToken);
     await farm.connect(notOwner2).stake(oneToken);   
 
-    // Increase time by 1 week
-    await network.provider.send("evm_increaseTime", [3550 * 24 * 5]);
+    // Increase time by almost 1 week
+    await network.provider.send("evm_increaseTime", [3550 * 24 * 7]);
     await network.provider.send("evm_mine");
 
     await farm.connect(notOwner).getReward();
     await farm.connect(notOwner).withdraw(oneToken); 
 
-      await farm.connect(notOwner2).getReward();
+    await farm.connect(notOwner2).getReward();
     await farm.connect(notOwner2).withdraw(oneToken);   
 
-    console.log('farm balance',  (await rewardToken.balanceOf(farm.address)).toString());
+    //console.log('farm balance',  (await rewardToken.balanceOf(farm.address)).toString());
     
     const afterBalance = await rewardToken.balanceOf(notOwner.address);
     const afterOtherBalance = await rewardToken.balanceOf(notOwner2.address);
     const afterStakeBalance = await stakeToken.balanceOf(notOwner.address);
 
     //console.log('before', initialBalance.toString());
-    console.log('after ', afterBalance.toString(), afterOtherBalance.toString());
-    // Unsure what should be the exact value
-    expect(afterBalance).to.be.above(initialBalance);
+    //console.log('after ', afterBalance.toString(), afterOtherBalance.toString());
 
+    expect(afterBalance).to.be.above(initialBalance);
     expect(initialStakeBalance).to.equal(afterStakeBalance);
+
+    const precision = 1e13; // remove some precision from numbers
+    // make sure both participants get the same amount
+    expect(afterOtherBalance.div(precision)).to.equal(afterBalance.div(precision));
   });
 
+  it("Two farms give equal rewards", async function () {
+
+    const MockERC20 = await ethers.getContractFactory("MockERC20");
+    const stakeToken2 = await MockERC20.deploy("blah", "bleh");
+    await stakeToken2.deployed();
+    await stakeToken2.getFreeTokens(notOwner2.address, tenTokens);
+
+    await farmController.addFarm(stakeToken2.address, { gasLimit: 2000000});
+    await farmController.setRates([1, 1]);
+
+    const farm2Addr = await farmController.getFarm(1);
+    const FarmFactory = await ethers.getContractFactory("LPFarm");
+    const farm2 = FarmFactory.attach(farm2Addr);
+
+    await rewardToken.approve(farmController.address, rewardTokenstotal);
+    await farmController.notifyRewards(rewardTokenstotal);
+
+
+    //console.log('farm balance',  (await rewardToken.balanceOf(farm.address)).toString());
+    const initialBalance = await rewardToken.balanceOf(notOwner.address);
+    const initialBalance2 = await rewardToken.balanceOf(notOwner2.address);
+
+    await stakeToken.connect(notOwner).approve(farm.address, oneToken);
+    await farm.connect(notOwner).stake(oneToken);
+
+    await stakeToken2.connect(notOwner2).approve(farm2.address, oneToken);
+    await farm2.connect(notOwner2).stake(oneToken);
+
+    // Increase time by almost 1 week
+    await network.provider.send("evm_increaseTime", [3550 * 24 * 7]);
+    await network.provider.send("evm_mine");
+
+    await farm.connect(notOwner).getReward();
+    await farm.connect(notOwner).withdraw(oneToken); 
+
+    await farm2.connect(notOwner2).getReward();
+    await farm2.connect(notOwner2).withdraw(oneToken); 
+
+    //console.log('farm balance',  (await rewardToken.balanceOf(farm.address)).toString());
+    
+    const afterBalance = await rewardToken.balanceOf(notOwner.address);
+    const afterOtherBalance = await rewardToken.balanceOf(notOwner2.address);
+
+    //console.log('before', initialBalance.toString());
+    console.log('after ', afterBalance.toString(), afterOtherBalance.toString());
+
+    expect(afterBalance).to.be.above(initialBalance);
+    expect(afterOtherBalance).to.be.above(initialBalance2);
+
+    // make sure both participants get the same amount
+    expect(afterOtherBalance).to.equal(afterBalance);
+  });
 });
