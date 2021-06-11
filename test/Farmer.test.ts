@@ -99,6 +99,7 @@ describe("Farmer", function () {
     expect(middleBalance).to.equal(afterBalance.sub(oneToken));
   });
 
+  // Two participants in the same farm, with the same stake
   it("Staking gives rewards to two participants", async function () {
     await farmController.notifyRewards(rewardTokenstotal);
 
@@ -139,8 +140,8 @@ describe("Farmer", function () {
     expect(afterOtherBalance.div(precision)).to.equal(afterBalance.div(precision));
   });
 
+  // Two participants, each in his own farm. Farms are set to have equal reward rates.
   it("Two farms give equal rewards", async function () {
-
     const MockERC20 = await ethers.getContractFactory("MockERC20");
     const stakeToken2 = await MockERC20.deploy("blah", "bleh");
     await stakeToken2.deployed();
