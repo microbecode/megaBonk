@@ -29,37 +29,37 @@ async function main() {
   const owner = await deployer.getAddress();
 
 /*   const BonkTokenOld = await ethers.getContractFactory("BonkTokenOld");
-  const bonkTokenOld = await BonkTokenOld.deploy();
-  await bonkTokenOld.deployed();
-  console.log("BonkTokenOld address:", bonkTokenOld.address);
+  const rewardTokenOld = await BonkTokenOld.deploy();
+  await rewardTokenOld.deployed();
+  console.log("BonkTokenOld address:", rewardTokenOld.address);
 
   // get some free tokens for testing
   const OLD_INIT_SUPPLY = ethers.utils.parseUnits("3000", 18);
-  await bonkTokenOld.getFreeTokens(OLD_INIT_SUPPLY); */
-  // await bonkTokenOld.transfer("0x...", OLD_INIT_SUPPLY.div(2)); // todo: hardcoded address
+  await rewardTokenOld.getFreeTokens(OLD_INIT_SUPPLY); */
+  // await rewardTokenOld.transfer("0x...", OLD_INIT_SUPPLY.div(2)); // todo: hardcoded address
 
   const BonkToken = await ethers.getContractFactory("BonkToken");
-  const bonkToken = await BonkToken.deploy(
+  const rewardToken = await BonkToken.deploy(
     "BONK Token v2",
     "megaBONK",
-    "4000000",
+    "4000000"
   );
-  await bonkToken.deployed();
-  console.log("BonkToken address:", bonkToken.address);
+  await rewardToken.deployed();
+  console.log("BonkToken (reward token) address:", rewardToken.address);
 
 /*   const BonkMigrator = await ethers.getContractFactory("BonkMigrator");
   const bonkMigrator = await BonkMigrator.deploy(
-    bonkTokenOld.address,
-    bonkToken.address,
+    rewardTokenOld.address,
+    rewardToken.address,
   );
   await bonkMigrator.deployed();
   console.log("BonkMigrator address:", bonkMigrator.address); */
 
   // Enable transfers
-  await bonkToken.enableTransfers();
-  //await bonkToken.transfer(clientAddr, 50e18);
-  /* const sendToMigrator = await bonkToken.balanceOf(owner);
-  await bonkToken.transfer(bonkMigrator.address, sendToMigrator); 
+  await rewardToken.enableTransfers();
+  //await rewardToken.transfer(clientAddr, 50e18);
+  /* const sendToMigrator = await rewardToken.balanceOf(owner);
+  await rewardToken.transfer(bonkMigrator.address, sendToMigrator); 
 
   // NFT minter
   const MINT_FEE = ethers.utils.parseUnits("1", 18); // 1 BONK fee
@@ -67,8 +67,8 @@ async function main() {
   const bonkNftMinterArgs = [
     "Bonk NFT Minter",
     "BONK NFT",
-    bonkToken.address,
-    bonkToken.address, // just set the fee receiver to be anything else than the owner
+    rewardToken.address,
+    rewardToken.address, // just set the fee receiver to be anything else than the owner
     MINT_FEE,
   ];
 
@@ -79,7 +79,7 @@ async function main() {
   await bonkNftMinter.deployed();
   console.log("BonkNftMinter address:", bonkNftMinter.address);
 
-  await bonkNftMinter.setBonkToken(bonkToken.address);
+  await bonkNftMinter.setBonkToken(rewardToken.address);
   const NEW_FEE = ethers.utils.parseUnits("99", 16); // 0.99 BONK fee
   await bonkNftMinter.setBonkFee(NEW_FEE);
 */
@@ -87,11 +87,11 @@ async function main() {
   // Deploy staking contracts
   const MockERC20 = await ethers.getContractFactory("MockERC20");
 
-  const token1 = await MockERC20.deploy("Othertoken", "OT");
-  await token1.deployed();
+  const stakeToken = await MockERC20.deploy("Othertoken", "OT");
+  await stakeToken.deployed();
   const tenTokens = ethers.utils.parseUnits("10", 18);
-  await token1.getFreeTokens(clientAddr, tenTokens);
-  console.log("token1 address:", token1.address);
+  await stakeToken.getFreeTokens(clientAddr, tenTokens);
+  console.log("stakeToken address:", stakeToken.address);
 
 /*   const token2 = await MockERC20.deploy("BONK/mBONK LP Token", "BONK/mBONK");
   await token2.deployed();
@@ -113,18 +113,18 @@ async function main() {
 /*   const farmController = await (
     await upgrades.deployProxy(
       (await ethers.getContractFactory("FarmController")).connect(deployer),
-      [token1.address],
+      [stakeToken.address],
       {
         initializer: "initialize(address)",
       },
     )
   ).deployed(); */
   const contrFactory = await ethers.getContractFactory("FarmController");
-  const farmController = await contrFactory.deploy(bonkToken.address)
+  const farmController = await contrFactory.deploy(rewardToken.address)
   await farmController.deployed();
   console.log("FarmController deployed to:", farmController.address);
 
- /*  await farmController.addFarm(token1.address, { gasLimit: 2000000} );
+ /*  await farmController.addFarm(stakeToken.address, { gasLimit: 2000000} );
   await farmController.addFarm(token2.address, { gasLimit: 2000000});
   await farmController.addFarm(token3.address, { gasLimit: 2000000});
   await farmController.addFarm(token4.address, { gasLimit: 2000000});
@@ -133,14 +133,14 @@ async function main() {
   await farmController.setRates([1, 1]);
   //
   // Allocate 10% of total supply to the initial farms
-  const ownerBalance = await bonkToken.balanceOf(owner);
+  const ownerBalance = await rewardToken.balanceOf(owner);
   const INITIAL_REWARDS = ownerBalance.div(10);
   console.log(
     "Balance, INITIAL_REWARDS:",
     ownerBalance.toString(),
     INITIAL_REWARDS.toString(),
   );
-  await bonkToken.approve(farmController.address, INITIAL_REWARDS);
+  await rewardToken.approve(farmController.address, INITIAL_REWARDS);
   await farmController.notifyRewards(INITIAL_REWARDS);
 
   console.log("DONE");*/
@@ -149,11 +149,11 @@ async function main() {
 
   // We also save the contract artifacts and addresses in the frontend directory
   await saveFrontendFiles(
-    /* bonkTokenOld, */
-    bonkToken,
+    /* rewardTokenOld, */
+    rewardToken,
 /*     bonkMigrator,
     bonkNftMinter, */
-    token1,
+    stakeToken,
 /*    token2,
     token3,
     token4,
@@ -161,15 +161,15 @@ async function main() {
     farmController
   );
 
-  await verifyContracts(/* bonkNftMinter, bonkNftMinterArgs,  */farmController, bonkToken);
+  await verifyContracts(/* bonkNftMinter, bonkNftMinterArgs,  */farmController, stakeToken, rewardToken);
 }
 
 async function saveFrontendFiles(
-/*   bonkTokenOld: Contract, */
-  bonkToken: Contract,
+/*   rewardTokenOld: Contract, */
+  rewardToken: Contract,
 /*   bonkMigrator: Contract,
   bonkNftMinter: Contract, */
-  token1: Contract,
+  stakeToken: Contract,
 /* token2: Contract,
    token3: Contract,
   token4: Contract,
@@ -186,11 +186,11 @@ async function saveFrontendFiles(
     contractsDir + "/contract-address.json",
     JSON.stringify(
       {
-      /*   BonkTokenOld: bonkTokenOld.address, */
-        BonkToken: bonkToken.address,
+      /*   BonkTokenOld: rewardTokenOld.address, */
+        BonkToken: rewardToken.address,
     /*     BonkMigrator: bonkMigrator.address,
         BonkNftMinter: bonkNftMinter.address, */
-        Token1: token1.address,
+        stakeToken: stakeToken.address,
  /*       Token2: token2.address,
          Token3: token3.address,
         Token4: token4.address,
@@ -246,7 +246,8 @@ const verifyContracts = async (
 /*   bonkNftMinter: Contract,
   bonkNftMinterArgs: (string | BigNumber)[], */
   farmController: Contract,
-  stakeToken: Contract
+  stakeToken : Contract,
+  rewardToken: Contract
 ) => {
   if (network.name !== "hardhat") {
     console.log('Waiting for the contract to be distributed in Etherscan...')
@@ -258,10 +259,19 @@ const verifyContracts = async (
       constructorArguments: bonkNftMinterArgs,
     }); */
 
-    // not working yet
+    await hre.run("verify:verify", {
+      address: rewardToken.address,
+      constructorArguments: ["BONK Token v2", "megaBONK", "4000000"]
+    });   
+
+    await hre.run("verify:verify", {
+      address: stakeToken.address,
+      constructorArguments: ["Othertoken", "OT"]
+    }); 
+
     await hre.run("verify:verify", {
       address: farmController.address,
-      constructorArguments: [stakeToken.address],
+      constructorArguments: [rewardToken.address]
     });   
     console.log('Verification done')
     
