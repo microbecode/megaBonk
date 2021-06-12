@@ -40,7 +40,8 @@ const config: HardhatUserConfig = {
     },
     ropsten: {
       url: providerRopsten,
-      accounts: [privKeyExists]
+      accounts: [privKeyExists],
+      gasPrice: 2000000000 // 2gwei
     },
     mainnet: {
       url: providerMainnet,
