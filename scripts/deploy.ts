@@ -110,7 +110,7 @@ async function main() {
   console.log("token5 address:", token5.address); */
 
   // deploy FarmController
-  const farmController = await (
+/*   const farmController = await (
     await upgrades.deployProxy(
       (await ethers.getContractFactory("FarmController")).connect(deployer),
       [token1.address],
@@ -118,7 +118,10 @@ async function main() {
         initializer: "initialize(address)",
       },
     )
-  ).deployed();
+  ).deployed(); */
+  const contrFactory = await ethers.getContractFactory("FarmController");
+  const farmController = await contrFactory.deploy(bonkToken.address)
+  await farmController.deployed();
   console.log("FarmController deployed to:", farmController.address);
 
  /*  await farmController.addFarm(token1.address, { gasLimit: 2000000} );
@@ -142,6 +145,8 @@ async function main() {
 
   console.log("DONE");*/
 
+  await farmController.transferOwnership(clientAddr);
+
   // We also save the contract artifacts and addresses in the frontend directory
   await saveFrontendFiles(
     /* bonkTokenOld, */
@@ -156,7 +161,7 @@ async function main() {
     farmController
   );
 
-  await verifyContracts(/* bonkNftMinter, bonkNftMinterArgs,  */farmController);
+  await verifyContracts(/* bonkNftMinter, bonkNftMinterArgs,  */farmController, bonkToken);
 }
 
 async function saveFrontendFiles(
@@ -240,21 +245,24 @@ async function saveFrontendFiles(
 const verifyContracts = async (
 /*   bonkNftMinter: Contract,
   bonkNftMinterArgs: (string | BigNumber)[], */
-  farmController: Contract
+  farmController: Contract,
+  stakeToken: Contract
 ) => {
   if (network.name !== "hardhat") {
     console.log('Waiting for the contract to be distributed in Etherscan...')
     const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
-    await delay(30000);
+    await delay(30000); 
     
 /*     await hre.run("verify:verify", {
       address: bonkNftMinter.address,
       constructorArguments: bonkNftMinterArgs,
     }); */
-    /* await hre.run("verify:verify", {
+
+    // not working yet
+    await hre.run("verify:verify", {
       address: farmController.address,
-      constructorArguments: bonkNftMinterArgs,
-    }); */
+      constructorArguments: [stakeToken.address],
+    });   
     console.log('Verification done')
     
   }

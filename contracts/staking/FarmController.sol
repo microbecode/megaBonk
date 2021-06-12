@@ -2,15 +2,14 @@
 
 pragma solidity ^0.7.5;
 
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "./LPFarm.sol";
 import "./IRewardDistributionRecipientTokenOnly.sol";
 
-contract FarmController is OwnableUpgradeable {
+contract FarmController is Ownable {
 
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
@@ -25,11 +24,9 @@ contract FarmController is OwnableUpgradeable {
 
   IERC20 public rewardToken;
 
-  function initialize(address token)
-  external
+  constructor(address rToken)
   {
-    __Ownable_init();
-    rewardToken = IERC20(token);
+    rewardToken = IERC20(rToken);
   }
 
   function addFarm(address _lptoken)
