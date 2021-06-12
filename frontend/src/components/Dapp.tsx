@@ -3,7 +3,6 @@ import { BigNumber, ethers } from "ethers";
 import { Container } from "react-bootstrap";
 
 import contractAddress from "../contracts/contract-address.json";
-import BonkTokenOldArtifact from "../contracts/BonkTokenOld.json";
 import BonkTokenArtifact from "../contracts/BonkToken.json";
 import BonkNftMinterArtifact from "../contracts/BonkNftMinter.json";
 
@@ -85,7 +84,6 @@ type DappState = {
   networkError?: string;
   isDarkTheme?: boolean;
   isProcessing?: boolean;
-  bonkTokenOld?: ethers.Contract;
   bonkToken?: ethers.Contract;
   bonkNFTMinter?: ethers.Contract;
 };
@@ -119,12 +117,10 @@ export class Dapp extends React.Component<{}, DappState> {
       tokenData,
       isDarkTheme,
       isProcessing,
-      bonkTokenOld,
       bonkToken,
       bonkNFTMinter,
     } = this.state;
 
-    const contractBonkTokenOld = bonkTokenOld;
     const contractBonkToken = bonkToken;
     const contractBonkNFTMinter = bonkNFTMinter;
 
@@ -138,7 +134,6 @@ export class Dapp extends React.Component<{}, DappState> {
         >
           <ContractsContext.Provider
             value={{
-              contractBonkTokenOld,
               contractBonkToken,
               contractBonkNFTMinter,
             }}
@@ -293,14 +288,6 @@ export class Dapp extends React.Component<{}, DappState> {
     // When, we initialize the contract using that provider and the token's
     // artifact. You can do this same thing with your contracts.
     this.setState({
-      bonkTokenOld: new ethers.Contract(
-        contractAddress.BonkTokenOld,
-        BonkTokenOldArtifact.abi,
-        this._provider.getSigner(0),
-      ),
-    });
-
-    this.setState({
       bonkToken: new ethers.Contract(
         contractAddress.BonkToken,
         BonkTokenArtifact.abi,
@@ -339,18 +326,12 @@ export class Dapp extends React.Component<{}, DappState> {
   }
 
   async _getTokenData() {
-    if (this.state.bonkTokenOld) {
-      const name = await this.state.bonkTokenOld.name();
-      const symbol = await this.state.bonkTokenOld.symbol();
-      const decimals = await this.state.bonkTokenOld.decimals();
-      this.setState({ tokenData: { name, symbol, decimals } });
-      this.setState({ decimals });
-    } else {
-      this.setState({
-        tokenData: { name: undefined, symbol: undefined, decimals: undefined },
-      });
-      this.setState({ decimals: undefined });
-    }
+
+    this.setState({
+      tokenData: { name: undefined, symbol: undefined, decimals: undefined },
+    });
+    this.setState({ decimals: undefined });
+    
   }
 
   async _updateBalance() {
