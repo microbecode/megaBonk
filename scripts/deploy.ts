@@ -37,19 +37,8 @@ async function main() {
   await rewardToken.deployed();
   console.log("BonkToken (reward token) address:", rewardToken.address);
 
-  const BonkMigrator = await ethers.getContractFactory("BonkMigrator");
-  const bonkMigrator = await BonkMigrator.deploy(
-    rewardToken.address, // incorrect, but just to get it deployed for now
-    rewardToken.address,
-  );
-  await bonkMigrator.deployed();
-  console.log("BonkMigrator address:", bonkMigrator.address);
-
   // Enable transfers
   await rewardToken.enableTransfers();
-  //await rewardToken.transfer(clientAddr, 50e18);
-  const sendToMigrator = await rewardToken.balanceOf(owner);
-  await rewardToken.transfer(bonkMigrator.address, sendToMigrator); 
 
   // NFT minter
   const MINT_FEE = ethers.utils.parseUnits("1", 18); // 1 BONK fee
@@ -105,8 +94,12 @@ async function main() {
   await farmController.deployed();
   console.log("FarmController deployed to:", farmController.address);
 
- /*  await farmController.addFarm(stakeToken.address, { gasLimit: 2000000} );
-  await farmController.addFarm(token2.address, { gasLimit: 2000000});
+  await farmController.addFarm(stakeToken.address, { gasLimit: 2000000} );
+  console.log('count', ( await farmController.getFarmsCount()).toString());  
+  const farmAddr = await farmController.getFarm(0);
+  console.log('Farm deployed to:', farmAddr);
+
+ /* await farmController.addFarm(token2.address, { gasLimit: 2000000});
   await farmController.addFarm(token3.address, { gasLimit: 2000000});
   await farmController.addFarm(token4.address, { gasLimit: 2000000});
   await farmController.addFarm(token5.address, { gasLimit: 2000000}); 
@@ -131,7 +124,6 @@ async function main() {
   // We also save the contract artifacts and addresses in the frontend directory
   await saveFrontendFiles(
     rewardToken,
-    bonkMigrator,
     bonkNftMinter,
     stakeToken,
 /*    token2,
@@ -141,12 +133,13 @@ async function main() {
     farmController
   );
 
-  await verifyContracts(bonkNftMinter, bonkNftMinterArgs, farmController, stakeToken, rewardToken);
+  await verifyContracts(bonkNftMinter, bonkNftMinterArgs, farmController, stakeToken, rewardToken, farmAddr);
+
+  console.log('all done')
 }
 
 async function saveFrontendFiles(
   rewardToken: Contract,
-  bonkMigrator: Contract,
   bonkNftMinter: Contract,
   stakeToken: Contract,
 /* token2: Contract,
@@ -166,7 +159,6 @@ async function saveFrontendFiles(
     JSON.stringify(
       {
         BonkToken: rewardToken.address,
-        BonkMigrator: bonkMigrator.address,
         BonkNftMinter: bonkNftMinter.address, 
         stakeToken: stakeToken.address,
  /*       Token2: token2.address,
@@ -181,7 +173,6 @@ async function saveFrontendFiles(
   );
 
   const BonkTokenArtifact = artifacts.readArtifactSync("BonkToken");
-  const BonkMigratorArtifact = artifacts.readArtifactSync("BonkMigrator");
 
   const BonkNftMinterArtifact = artifacts.readArtifactSync("BonkNftMinter");
 
@@ -192,10 +183,6 @@ async function saveFrontendFiles(
   fs.writeFileSync(
     contractsDir + "/BonkToken.json",
     JSON.stringify(BonkTokenArtifact, null, 2),
-  );
-  fs.writeFileSync(
-    contractsDir + "/BonkMigrator.json",
-    JSON.stringify(BonkMigratorArtifact, null, 2),
   );
   fs.writeFileSync(
     contractsDir + "/BonkNftMinter.json",
@@ -220,11 +207,12 @@ const verifyContracts = async (
   bonkNftMinterArgs: (string | BigNumber)[],
   farmController: Contract,
   stakeToken : Contract,
-  rewardToken: Contract
+  rewardToken: Contract,
+  farmAddr: string
 ) => {
   if (network.name !== "hardhat" && network.name !== "localhost") {
     console.log('Waiting for the contract to be distributed in Etherscan...')
-    const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
+    
     await delay(30000); 
     
     await hre.run("verify:verify", {
@@ -232,16 +220,23 @@ const verifyContracts = async (
       constructorArguments: bonkNftMinterArgs,
     }); 
 
+    console.log('verified 1');
+
     await hre.run("verify:verify", {
       address: rewardToken.address,
       constructorArguments: ["BONK Token v2", "megaBONK", "4000000"]
     });   
-
+    console.log('verified 2');
     await hre.run("verify:verify", {
       address: stakeToken.address,
       constructorArguments: ["Othertoken", "OT"]
     }); 
-
+    console.log('verified 3');
+    await hre.run("verify:verify", {
+      address: farmAddr,
+      constructorArguments: []
+    });  
+    console.log('verified 4');
     await hre.run("verify:verify", {
       address: farmController.address,
       constructorArguments: [rewardToken.address]
@@ -250,6 +245,8 @@ const verifyContracts = async (
     
   }
 }
+
+const delay = (ms : number) => new Promise(res => setTimeout(res, ms));
   
 
 
