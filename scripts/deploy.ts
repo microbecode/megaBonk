@@ -93,7 +93,10 @@ async function main() {
   console.log("FarmController deployed to:", farmController.address);
 
   await farmController.addFarm(stakeToken.address, { gasLimit: 2000000} );
-  await delay(60000); // Unsure why this is needed for Ropsten - locally everything works fine
+  if (network.name === "Ropsten") {
+    await delay(60000); // Unsure why this is needed for Ropsten - locally everything works fine
+  }
+  
   console.log('count', ( await farmController.getFarmsCount()).toString());  
   const farmAddr = await farmController.getFarm(0);
   console.log('Farm deployed to:', farmAddr);

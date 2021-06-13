@@ -290,6 +290,7 @@ export class Dapp extends React.Component<{}, DappState> {
 
     // When, we initialize the contract using that provider and the token's
     // artifact. You can do this same thing with your contracts.
+
     this.setState({
       bonkToken: new ethers.Contract(
         contractAddress.BonkToken,
@@ -329,12 +330,18 @@ export class Dapp extends React.Component<{}, DappState> {
   }
 
   async _getTokenData() {
-
-    this.setState({
-      tokenData: { name: undefined, symbol: undefined, decimals: undefined },
-    });
-    this.setState({ decimals: undefined });
-    
+    if (this.state.bonkToken) {
+      const name = await this.state.bonkToken.name();
+      const symbol = await this.state.bonkToken.symbol();
+      const decimals = await this.state.bonkToken.decimals();
+      this.setState({ tokenData: { name, symbol, decimals } });
+      this.setState({ decimals });
+    } else {
+      this.setState({
+        tokenData: { name: undefined, symbol: undefined, decimals: undefined },
+      });
+      this.setState({ decimals: undefined });
+    }
   }
 
   async _updateBalance() {
