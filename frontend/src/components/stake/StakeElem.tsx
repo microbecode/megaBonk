@@ -10,11 +10,25 @@ import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
 import { Notification } from "../Notification";
 
 interface Props {
-  balance: BigNumber
+  balance: BigNumber,
+  onStake: (tokens : BigNumber) => void
 }
 
 export function StakeElem(props : Props) {
-  const { balance } = props;
+  const { balance, onStake } = props;
+
+  const [tokensSelected, setTokensSelected] = useState<BigNumber>(ethers.BigNumber.from('0'));
+
+  const onInsertMax = (e) => {
+    e.preventDefault();
+    setTokensSelected(balance);
+  }
+
+  const changeTokenAmount = (e) => {
+    const absolute = ethers.BigNumber.from(e.target.value);
+    const display = ethers.utils.formatUnits(absolute, 18);
+    setTokensSelected(absolute);
+  }
 
 
   return (
@@ -26,37 +40,50 @@ export function StakeElem(props : Props) {
       </Row>
       <Row>
         <Col>
-          Balance: {balance.toString()}
+          Balance: {ethers.utils.formatUnits(balance, 18) }
         </Col>
       </Row>
-      <Row>
-        <Card className="card-container theme-card my-2 mx-0"
-              style={{ width: "16rem" }}>
-          <Card.Body>
-            <Card.Title></Card.Title>
-            <Card.Text>
-              Insert mBONK to stake
-              <a
-                    href="#stake"
-                    rel="noopener noreferrer"
-                    className="my-auto text-decoration-underline"
-                    onClick={() => {}}
-                  >
-                    <u>Insert maximum</u>
-                  </a>
-              </Card.Text>
-          </Card.Body>
-        </Card>
-      </Row>
-      <Row>
-        <Button
-          variant="primary-outline"
-          type="submit"
-          className="bonk-btn arrow"
-        >
-          Stake
-        </Button>
-      </Row>
+      <Form onSubmit={() => {}}>
+        <Row>   
+        <Col>   
+          <Form.Group controlId="stakeAmount">
+            
+            <Form.Control
+              type="text"
+              placeholder="Insert mBONK to stake"
+              required
+              value={tokensSelected.toString()}
+              onChange={e => changeTokenAmount(e)}
+            />
+            </Form.Group>
+              </Col>
+              <Col>
+                <a
+                href="#stake"
+                rel="noopener noreferrer"
+                className="my-auto text-decoration-underline"
+                onClick={(e) => { onInsertMax(e) }}
+                >
+                  <u>Insert maximum</u>
+                </a>
+              
+              </Col>
+            
+          
+        </Row>  
+        <Row>
+          <Button
+            variant="primary-outline"
+            type="submit"
+            className="bonk-btn arrow"
+            onClick={(e) => { onStake(tokensSelected); }}
+          >
+            Stake
+          </Button>
+        </Row>
+
+      </Form>
+      
       <Row>0</Row>
       <Row>Your mBONK rewards</Row>
       <Row>

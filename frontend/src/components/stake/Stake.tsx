@@ -11,18 +11,13 @@ import { Notification } from "../Notification";
 import { StakeElem } from "./StakeElem";
 
 export function Stake() {
-  const baseUrl = 'https://bonk-pinata.herokuapp.com';
 
-  const hiddenFileInput = useRef<HTMLInputElement>(null);
-  const [img, setImg] = useState(null);
-  const [imgFile, setImgFile] = useState(null);
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
 
   const {
-    contractBonkNFTMinter,
     contractBonkToken
   } = useContext(ContractsContext);
   const { selectedAddress, decimals } = useContext(Web3Context);
@@ -46,37 +41,10 @@ export function Stake() {
     loadBalances();
   }, [loadBalances, toggleUpdate]);
 
-
-  const handleFileUpload = (e: any) => {
-    if (hiddenFileInput?.current !== null) {
-      hiddenFileInput.current.click();
-    }
-  };
-
-  const handleFileChange = (e: any) => {
-    if (!e?.target?.files) {
-      setImg(null);
-      return;
-    }
-    const fileUploaded = e.target.files[0];
-    if (!fileUploaded) {
-      setImg(null);
-      return;
-    }
-    setImg(fileUploaded)
-    const reader = new FileReader();
-    reader.onload = imageIsLoaded;
-    reader.readAsDataURL(fileUploaded);
-  };
-
-   const imageIsLoaded = (e: any) => {
-    setImgFile(e?.target?.result);
-  }; 
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+    e.preventDefault();    
   }
+
 
   return (
     <div className="bonked">
@@ -88,9 +56,9 @@ export function Stake() {
             <Col>
               <StakeElem balance={balance}></StakeElem>
             </Col>
-            <Col>
+          {/*   <Col>
               <StakeElem balance={balance}></StakeElem>
-            </Col>
+            </Col> */}
          </Row>
         </Container>
       </div>
