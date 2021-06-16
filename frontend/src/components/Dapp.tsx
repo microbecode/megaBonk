@@ -6,6 +6,7 @@ import contractAddress from "../contracts/contract-address.json";
 import BonkTokenArtifact from "../contracts/BonkToken.json";
 import BonkNftMinterArtifact from "../contracts/BonkNftMinter.json";
 import BonkFarmControllerArtifact from "../contracts/FarmControllerArtifact.json";
+import BonkFarmArtifact from "../contracts/LPFarm.json";
 
 import { ContractsContext, Web3Context } from "../contexts/Context";
 
@@ -327,7 +328,7 @@ export class Dapp extends React.Component<{}, DappState> {
 
         const farm = new ethers.Contract(
           farmAddress,
-          BonkFarmControllerArtifact.abi,
+          BonkFarmArtifact.abi,
           this._provider.getSigner(0)
         );
 

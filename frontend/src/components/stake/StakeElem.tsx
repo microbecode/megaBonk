@@ -11,11 +11,12 @@ import { Notification } from "../Notification";
 
 interface Props {
   balance: BigNumber,
-  onFarmStake: (tokens : BigNumber) => void
+  onFarmStake: (tokens : BigNumber) => void,
+  isStaking: boolean
 }
 
 export function StakeElem(props : Props) {
-  const { balance, onFarmStake } = props;
+  const { balance, onFarmStake, isStaking } = props;
 
   const [tokensSelected, setTokensSelected] = useState<BigNumber>(ethers.BigNumber.from('0'));
 
@@ -35,7 +36,7 @@ export function StakeElem(props : Props) {
     <Container fluid>
       <Row>
         <Col>
-          Stake mBONK
+          {isStaking ? 'Stake' : 'Unstake'} mBONK
         </Col>
       </Row>
       <Row>
@@ -50,7 +51,7 @@ export function StakeElem(props : Props) {
             
             <Form.Control
               type="text"
-              placeholder="Insert mBONK to stake"
+              placeholder={"Insert mBONK to " + (isStaking ? "stake" : "unstake")}
               required
               value={tokensSelected.toString()}
               onChange={e => changeTokenAmount(e)}
@@ -65,11 +66,8 @@ export function StakeElem(props : Props) {
                 onClick={(e) => { onInsertMax(e) }}
                 >
                   <u>Insert maximum</u>
-                </a>
-              
+                </a>              
               </Col>
-            
-          
         </Row>  
         <Row>
           <Button
@@ -78,7 +76,7 @@ export function StakeElem(props : Props) {
             className="bonk-btn arrow"
             onClick={(e) => { onFarmStake(tokensSelected); }}
           >
-            Stake
+            {isStaking ? 'Stake' : 'Unstake'}
           </Button>
         </Row>
 
