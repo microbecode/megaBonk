@@ -1,5 +1,5 @@
 import React from "react";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import { Container } from "react-bootstrap";
 
 import contractAddress from "../contracts/contract-address.json";
@@ -89,6 +89,7 @@ type DappState = {
   bonkToken?: ethers.Contract;
   bonkNFTMinter?: ethers.Contract;
   bonkFarmController?: ethers.Contract;
+  bonkFarms?: ethers.Contract[];
 };
 
 export class Dapp extends React.Component<{}, DappState> {
@@ -122,12 +123,12 @@ export class Dapp extends React.Component<{}, DappState> {
       isProcessing,
       bonkToken,
       bonkNFTMinter,
-      bonkFarmController
+      bonkFarms
     } = this.state;
 
     const contractBonkToken = bonkToken;
     const contractBonkNFTMinter = bonkNFTMinter;
-    const contractFarmController = bonkFarmController;
+    const contractBonkFarms = bonkFarms;
 
     return (
       <div>
@@ -141,7 +142,7 @@ export class Dapp extends React.Component<{}, DappState> {
             value={{
               contractBonkToken,
               contractBonkNFTMinter,
-              contractFarmController
+              contractBonkFarms
             }}
           >
             <Header
@@ -312,12 +313,31 @@ export class Dapp extends React.Component<{}, DappState> {
       ),
     });
 
+    const contractFarmController = new ethers.Contract(
+      contractAddress.FarmController,
+      BonkFarmControllerArtifact.abi,
+      this._provider.getSigner(0)
+    );
+
+    let farms : Contract[] = [];
+
+    const farmCount = (await contractFarmController.getFarmsCount()) as number;
+    for (let i = 0; i < farmCount; i++) {
+        const farmAddress = await contractFarmController.getFarm(i) as string;
+
+        const farm = new ethers.Contract(
+          farmAddress,
+          BonkFarmControllerArtifact.abi,
+          this._provider.getSigner(0)
+        );
+
+        farms.push(farm);
+    }
+
+    console.log('init farmsssss', farms.length)
+
     this.setState({
-      bonkFarmController: new ethers.Contract(
-        contractAddress.FarmController,
-        BonkFarmControllerArtifact.abi,
-        this._provider.getSigner(0),
-      ),
+      bonkFarms: farms,
     });
   }
 

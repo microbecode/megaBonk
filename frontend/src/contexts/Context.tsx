@@ -15,6 +15,7 @@ export const Web3Context = createContext<Partial<Web3ContextProps>>({});
 type ContractsContextProps = {
   contractBonkToken?: Contract;
   contractBonkNFTMinter?: Contract;
+  contractBonkFarms?: Contract[];
 };
 
 export const ContractsContext = createContext<Partial<ContractsContextProps>>(

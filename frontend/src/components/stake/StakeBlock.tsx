@@ -5,7 +5,7 @@ import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap"
 import "../../styles/createNFT.scss";
 import axios from "axios";
 import { ContractsContext, Web3Context } from "../../contexts/Context";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
 import { Notification } from "../Notification";
 import { StakeElem } from "./StakeElem";
@@ -17,9 +17,11 @@ export function StakeBlock() {
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
+  const [farms, setFarms] = useState<ethers.Contract[]>([]);
 
   const {
-    contractBonkToken
+    contractBonkToken,
+    contractBonkFarms
   } = useContext(ContractsContext);
   const { selectedAddress, decimals } = useContext(Web3Context);
 
@@ -41,15 +43,33 @@ export function StakeBlock() {
   useEffect(() => {
     loadBalances();
   }, [loadBalances, toggleUpdate]);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();    
   }
 
-  const onStake = (farmIndex : number, amount : BigNumber) => {
-    contractBonkToken.approve()
-  }
+  const onStake = async (farmIndex : number, amount : BigNumber) => {
+    console.log('farms', contractBonkFarms[0], farmIndex)
+    const farm = contractBonkFarms[farmIndex];
+    console.log('sending approve', farm.address, amount.toString());
 
+    const txApprove = await contractBonkToken.approve(farm.address, amount);
+
+    setWaitHash(txApprove.hash);
+    console.log('tx approve', txApprove)
+    await txApprove.wait();
+    setWaitHash(null);
+
+    const stakeTx = farm.stake(amount);
+    setWaitHash(stakeTx.hash);
+    console.log('tx stake', stakeTx)
+    await stakeTx.wait();
+    setWaitHash(null);
+
+    setSuccessText("Congratulations! You have staked some tokens " + amount.toString());
+
+    setToggleUpdate(!toggleUpdate);
+  }
 
   return (
     <div className="bonked">
@@ -57,14 +77,17 @@ export function StakeBlock() {
       {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="stake">
       <Container fluid>
-        <Row>
-            <Col>
-              <StakeFarmElem balance={balance} onStake={onStake} farmIndex={0}></StakeFarmElem>
-            </Col>
-          {/*   <Col>
-              <StakeElem balance={balance}></StakeElem>
-            </Col> */}
-         </Row>
+          {contractBonkFarms && contractBonkFarms.map((farm, i) => {
+            return (<Row key={i}>
+                <Col>
+                <StakeFarmElem balance={balance} onStake={onStake} farmIndex={0}></StakeFarmElem>
+                </Col>
+            {/*   <Col>
+                <StakeElem balance={balance}></StakeElem>
+                </Col> */}
+            </Row>)
+          })}
+        
         </Container>
       </div>
     </div>
