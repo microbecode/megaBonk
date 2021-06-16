@@ -5,12 +5,13 @@ import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap"
 import "../../styles/createNFT.scss";
 import axios from "axios";
 import { ContractsContext, Web3Context } from "../../contexts/Context";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
 import { Notification } from "../Notification";
 import { StakeElem } from "./StakeElem";
+import { StakeFarmElem } from "./StakeFarmElem";
 
-export function Stake() {
+export function StakeBlock() {
 
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
@@ -45,6 +46,10 @@ export function Stake() {
     e.preventDefault();    
   }
 
+  const onStake = (farmIndex : number, amount : BigNumber) => {
+    contractBonkToken.approve()
+  }
+
 
   return (
     <div className="bonked">
@@ -54,7 +59,7 @@ export function Stake() {
       <Container fluid>
         <Row>
             <Col>
-              <StakeElem balance={balance}></StakeElem>
+              <StakeFarmElem balance={balance} onStake={onStake} farmIndex={0}></StakeFarmElem>
             </Col>
           {/*   <Col>
               <StakeElem balance={balance}></StakeElem>

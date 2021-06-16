@@ -5,6 +5,7 @@ import { Container } from "react-bootstrap";
 import contractAddress from "../contracts/contract-address.json";
 import BonkTokenArtifact from "../contracts/BonkToken.json";
 import BonkNftMinterArtifact from "../contracts/BonkNftMinter.json";
+import BonkFarmControllerArtifact from "../contracts/FarmControllerArtifact.json";
 
 import { ContractsContext, Web3Context } from "../contexts/Context";
 
@@ -18,7 +19,7 @@ import { Header } from "./common/Header";
 import { Slogan } from "./slogan/Slogan";
 import { Intro } from "./intro/Intro";
 import { CreateNFT } from "./createNFT/CreateNFT";
-import { Stake } from "./stake/Stake";
+import { StakeBlock } from "./stake/StakeBlock";
 import { BinderNFT } from "./binderNFT/BinderNFT";
 import { Cards } from "./cards/Cards";
 import { Helpers } from "./helpers/Helpers";
@@ -87,6 +88,7 @@ type DappState = {
   isProcessing?: boolean;
   bonkToken?: ethers.Contract;
   bonkNFTMinter?: ethers.Contract;
+  bonkFarmController?: ethers.Contract;
 };
 
 export class Dapp extends React.Component<{}, DappState> {
@@ -120,10 +122,12 @@ export class Dapp extends React.Component<{}, DappState> {
       isProcessing,
       bonkToken,
       bonkNFTMinter,
+      bonkFarmController
     } = this.state;
 
     const contractBonkToken = bonkToken;
     const contractBonkNFTMinter = bonkNFTMinter;
+    const contractFarmController = bonkFarmController;
 
     return (
       <div>
@@ -137,6 +141,7 @@ export class Dapp extends React.Component<{}, DappState> {
             value={{
               contractBonkToken,
               contractBonkNFTMinter,
+              contractFarmController
             }}
           >
             <Header
@@ -166,7 +171,7 @@ export class Dapp extends React.Component<{}, DappState> {
 
               <Intro />
 
-              <Stake />
+              <StakeBlock />
 
           {/*     <Statistics /> */}
 
@@ -303,6 +308,14 @@ export class Dapp extends React.Component<{}, DappState> {
       bonkNFTMinter: new ethers.Contract(
         contractAddress.BonkNftMinter,
         BonkNftMinterArtifact.abi,
+        this._provider.getSigner(0),
+      ),
+    });
+
+    this.setState({
+      bonkFarmController: new ethers.Contract(
+        contractAddress.FarmController,
+        BonkFarmControllerArtifact.abi,
         this._provider.getSigner(0),
       ),
     });

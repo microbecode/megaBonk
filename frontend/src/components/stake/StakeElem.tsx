@@ -11,11 +11,11 @@ import { Notification } from "../Notification";
 
 interface Props {
   balance: BigNumber,
-  onStake: (tokens : BigNumber) => void
+  onFarmStake: (tokens : BigNumber) => void
 }
 
 export function StakeElem(props : Props) {
-  const { balance, onStake } = props;
+  const { balance, onFarmStake } = props;
 
   const [tokensSelected, setTokensSelected] = useState<BigNumber>(ethers.BigNumber.from('0'));
 
@@ -26,7 +26,7 @@ export function StakeElem(props : Props) {
 
   const changeTokenAmount = (e) => {
     const absolute = ethers.BigNumber.from(e.target.value);
-    const display = ethers.utils.formatUnits(absolute, 18);
+    //const display = ethers.utils.formatUnits(absolute, 18);
     setTokensSelected(absolute);
   }
 
@@ -76,7 +76,7 @@ export function StakeElem(props : Props) {
             variant="primary-outline"
             type="submit"
             className="bonk-btn arrow"
-            onClick={(e) => { onStake(tokensSelected); }}
+            onClick={(e) => { onFarmStake(tokensSelected); }}
           >
             Stake
           </Button>
