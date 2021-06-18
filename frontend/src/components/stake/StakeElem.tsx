@@ -31,7 +31,7 @@ export function StakeElem(props : Props) {
     setTokensSelected(absolute);
   }
 
-
+// ethers.utils.formatUnits(balance, 18)
   return (
     <Container fluid>
       <Row>
@@ -41,7 +41,7 @@ export function StakeElem(props : Props) {
       </Row>
       <Row>
         <Col>
-          Balance: {ethers.utils.formatUnits(balance, 18) }
+          Balance: {balance ? balance.toString() : 0 }
         </Col>
       </Row>
       <Form onSubmit={() => {}}>

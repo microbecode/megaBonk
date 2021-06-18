@@ -33,7 +33,7 @@ type FarmsStakeBalance = {
   const { selectedAddress, decimals } = useContext(Web3Context);
 
   const loadBalances = useCallback(async () => {
-    console.log('hmm' , selectedAddress, contractBonkToken, decimals)
+    console.log('starting load balance' , selectedAddress, contractBonkToken, decimals)
     if (
       !selectedAddress ||
       !contractBonkToken ||
@@ -42,7 +42,7 @@ type FarmsStakeBalance = {
       return;
 
     const bonkBalance = await contractBonkToken.balanceOf(selectedAddress);
-    console.log('my address ' + selectedAddress + ' has tokens: ' + bonkBalance.toString())
+    console.log('my address ' + selectedAddress + ' has tokens: ' + bonkBalance.toString(), 'token addr ' + contractBonkToken.address)
 
     setBalance(bonkBalance);
   }, [selectedAddress, contractBonkToken, decimals]);
@@ -90,7 +90,7 @@ type FarmsStakeBalance = {
     await txApprove.wait();
     setWaitHash(null);
 
-    const stakeTx = farm.stake(amount);
+    const stakeTx = await farm.stake(amount);
     setWaitHash(stakeTx.hash);
     console.log('tx stake', stakeTx)
     await stakeTx.wait();
@@ -99,15 +99,39 @@ type FarmsStakeBalance = {
     setSuccessText("Congratulations! You have staked some tokens " + amount.toString());
 
     setToggleUpdate(!toggleUpdate);
+    console.log('update set')
+  }
+
+  const onUnstake = async (farmIndex : number, amount : BigNumber) => {
+    const farm = contractBonkFarms[farmIndex];
+/*     console.log('unstake sending approve', farm.address, amount.toString());
+
+    const txApprove = await contractBonkToken.approve(farm.address, amount);
+
+    setWaitHash(txApprove.hash);
+    console.log('unstake tx approve', txApprove)
+    await txApprove.wait();
+    setWaitHash(null); */
+
+    const stakeTx = await farm.withdraw(amount);
+    setWaitHash(stakeTx.hash);
+    console.log('unstake tx stake', stakeTx)
+    await stakeTx.wait();
+    setWaitHash(null);
+
+    setSuccessText("Congratulations! You have unstaked some tokens " + amount.toString());
+
+    setToggleUpdate(!toggleUpdate);
+    console.log('unstake update set')
   }
 
   const getFarmElem = (farm : Contract, index : number) => {
-    console.log('stake balance', farm)
+   // console.log('stake balance', farm)
     const stakeBalance = farmsBalances[farm.address];
 
     return (<Row key={index}>
         <Col>
-        <StakeFarmElem balance={balance} stakeBalance={stakeBalance} onStake={onStake} farmIndex={index}></StakeFarmElem>
+        <StakeFarmElem balance={balance} stakeBalance={stakeBalance} onStake={onStake} onUnstake={onUnstake} farmIndex={index}></StakeFarmElem>
         </Col>
     {/*   <Col>
         <StakeElem balance={balance}></StakeElem>
