@@ -14,9 +14,9 @@ import { StakeFarmElem } from "./StakeFarmElem";
 
 export function StakeBlock() {
 
-    type FarmsStakeBalance = {
-        [farmAddress: string]: BigNumber;
-    }
+type FarmsStakeBalance = {
+    [farmAddress: string]: BigNumber;
+}
 
 
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
@@ -25,7 +25,6 @@ export function StakeBlock() {
   const [successText, setSuccessText] = useState<string>(null);
   //const [farms, setFarms] = useState<ethers.Contract[]>([]);
   const [farmsBalances, setFarmsBalances] = useState<FarmsStakeBalance>({});
-  const [farmBalancesPopulated, setFarmBalancesPopulated] = useState<boolean>(false);
 
   const {
     contractBonkToken,
@@ -68,13 +67,15 @@ export function StakeBlock() {
     console.log('farm balances', farmsBalances, contractBonkFarms);
     
     setFarmsBalances(farmsBalances);
-    setFarmBalancesPopulated(true);
-  }, [selectedAddress, contractBonkFarms, setFarmBalancesPopulated, setFarmsBalances]);
+  }, [selectedAddress, contractBonkFarms, setFarmsBalances]);
 
   useEffect(() => {
     prepareFarmData();
   }, [prepareFarmData, setFarmsBalances, contractBonkFarms, toggleUpdate]);
 
+/*   if (farmsBalances) {
+    console.log(farmsBalances, farmsBalances.keys, farmsBalances, Object.keys(farmsBalances))
+  } */
 
 
   const onStake = async (farmIndex : number, amount : BigNumber) => {
@@ -113,14 +114,14 @@ export function StakeBlock() {
         </Col> */}
     </Row>)
   }
-  
+
   return (
     <div className="bonked">
       {waitHash && <WaitingForTransactionMessage txHash={waitHash}></WaitingForTransactionMessage> }
       {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="stake">
         <Container fluid>
-          {farmBalancesPopulated && contractBonkFarms.map((farm, i) => getFarmElem(farm, i) )}        
+          {farmsBalances && Object.keys(farmsBalances).length > 0 && contractBonkFarms.map((farm, i) => getFarmElem(farm, i) )}        
         </Container>
       </div>
     </div>
