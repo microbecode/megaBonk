@@ -14,12 +14,18 @@ import { StakeFarmElem } from "./StakeFarmElem";
 
 export function StakeBlock() {
 
+type FarmsStakeNumbers = {
+  stakeBalance: BigNumber,
+  earnedBalance: BigNumber
+}
+
 type FarmsStakeBalance = {
-    [farmAddress: string]: BigNumber;
+    [farmAddress: string]: FarmsStakeNumbers;
 }
 
 
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+  const [earned, setEarned] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
@@ -59,9 +65,11 @@ type FarmsStakeBalance = {
     let farmsBalances : FarmsStakeBalance = {};
     console.log('starting', contractBonkFarms.length)  
     for (let i = 0; i < contractBonkFarms.length; i++) {
-        const stakeBalance1 = await contractBonkFarms[i].balanceOf(selectedAddress);
-        console.log('found stake bal', stakeBalance1)
-        farmsBalances[contractBonkFarms[i].address] = stakeBalance1;
+        const stakeBalance = await contractBonkFarms[i].balanceOf(selectedAddress);
+        const earnedBalance = await contractBonkFarms[i].earned(selectedAddress);
+        const data : FarmsStakeNumbers = { stakeBalance, earnedBalance };
+        console.log('found stake bal', data.stakeBalance.toString(), data.earnedBalance.toString() )
+        farmsBalances[contractBonkFarms[i].address] = data;
     }
     
     console.log('farm balances', farmsBalances, contractBonkFarms);
@@ -104,14 +112,6 @@ type FarmsStakeBalance = {
 
   const onUnstake = async (farmIndex : number, amount : BigNumber) => {
     const farm = contractBonkFarms[farmIndex];
-/*     console.log('unstake sending approve', farm.address, amount.toString());
-
-    const txApprove = await contractBonkToken.approve(farm.address, amount);
-
-    setWaitHash(txApprove.hash);
-    console.log('unstake tx approve', txApprove)
-    await txApprove.wait();
-    setWaitHash(null); */
 
     const stakeTx = await farm.withdraw(amount);
     setWaitHash(stakeTx.hash);
@@ -131,7 +131,7 @@ type FarmsStakeBalance = {
 
     return (<Row key={index}>
         <Col>
-        <StakeFarmElem balance={balance} stakeBalance={stakeBalance} onStake={onStake} onUnstake={onUnstake} farmIndex={index}></StakeFarmElem>
+        <StakeFarmElem balance={balance} stakeBalance={stakeBalance.stakeBalance} earnedBalance={stakeBalance.earnedBalance} onStake={onStake} onUnstake={onUnstake} farmIndex={index}></StakeFarmElem>
         </Col>
     {/*   <Col>
         <StakeElem balance={balance}></StakeElem>

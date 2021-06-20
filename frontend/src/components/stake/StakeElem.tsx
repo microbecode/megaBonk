@@ -11,12 +11,13 @@ import { Notification } from "../Notification";
 
 interface Props {
   balance: BigNumber,
+  earnedBalance: BigNumber,
   onFarmStake: (tokens : BigNumber) => void,
   isStaking: boolean
 }
 
 export function StakeElem(props : Props) {
-  const { balance, onFarmStake, isStaking } = props;
+  const { balance, earnedBalance, onFarmStake, isStaking } = props;
 
   const [tokensSelected, setTokensSelected] = useState<BigNumber>(ethers.BigNumber.from('0'));
 
@@ -81,18 +82,20 @@ export function StakeElem(props : Props) {
         </Row>
 
       </Form>
-      
-      <Row>0</Row>
-      <Row>Your mBONK rewards</Row>
-      <Row>
-      <Button
-          variant="primary-outline"
-          type="submit"
-          className="bonk-btn arrow"
-        >
-          Collect
-        </Button>
-      </Row>
+      {isStaking && 
+      <>
+        <Row>{earnedBalance.toString()}</Row>
+        <Row>Your mBONK rewards</Row>
+        <Row>
+        <Button
+            variant="primary-outline"
+            type="submit"
+            className="bonk-btn arrow"
+          >
+            Collect
+          </Button>
+        </Row>
+      </>}
     </Container>
   );
 }

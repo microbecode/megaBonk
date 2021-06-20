@@ -13,13 +13,14 @@ import { StakeElem } from "./StakeElem";
 interface Props {
   balance: BigNumber,
   stakeBalance: BigNumber,
+  earnedBalance: BigNumber,
   onStake: (farmIndex : number, tokens : BigNumber) => void,
   onUnstake: (farmIndex : number, tokens : BigNumber) => void,
   farmIndex : number
 }
 
 export function StakeFarmElem(props : Props) {
-  const { balance, stakeBalance, onStake, onUnstake, farmIndex } = props;
+  const { balance, stakeBalance, earnedBalance, onStake, onUnstake, farmIndex } = props;
 
   const onFarmStake = (amount : BigNumber) => {
     onStake(farmIndex, amount);
@@ -33,10 +34,10 @@ export function StakeFarmElem(props : Props) {
     <Container fluid>
       <Row>
         <Col>
-          <StakeElem balance={balance} onFarmStake={onFarmStake} isStaking={true}></StakeElem>
+          <StakeElem balance={balance} earnedBalance={earnedBalance} onFarmStake={onFarmStake} isStaking={true}></StakeElem>
         </Col>
          <Col>
-          <StakeElem balance={stakeBalance} onFarmStake={onFarmUnstake} isStaking={false}></StakeElem>
+          <StakeElem balance={stakeBalance} earnedBalance={earnedBalance} onFarmStake={onFarmUnstake} isStaking={false}></StakeElem>
         </Col>
       </Row>
     </Container>

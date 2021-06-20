@@ -92,10 +92,11 @@ async function main() {
   await farmController.deployed();
   console.log("FarmController deployed to:", farmController.address);
 
-  await farmController.addFarm(rewardToken.address, { gasLimit: 2000000} );
-  if (network.name === "Ropsten") {
+  const farmTx = await farmController.addFarm(rewardToken.address, { gasLimit: 2000000} );
+  await farmTx.wait();
+/*   if (network.name === "Ropsten") {
     await delay(60000); // Unsure why this is needed for Ropsten - locally everything works fine
-  }
+  } */
   
   console.log('count', ( await farmController.getFarmsCount()).toString());  
   const farmAddr = await farmController.getFarm(0);
@@ -105,8 +106,8 @@ async function main() {
   await farmController.addFarm(token3.address, { gasLimit: 2000000});
   await farmController.addFarm(token4.address, { gasLimit: 2000000});
   await farmController.addFarm(token5.address, { gasLimit: 2000000}); 
-
-  await farmController.setRates([1, 1]);
+*/
+  await farmController.setRates([1]);
   //
   // Allocate 10% of total supply to the initial farms
   const ownerBalance = await rewardToken.balanceOf(owner);
@@ -119,7 +120,7 @@ async function main() {
   await rewardToken.approve(farmController.address, INITIAL_REWARDS);
   await farmController.notifyRewards(INITIAL_REWARDS);
 
-  console.log("DONE");*/
+  console.log("DONE");
 
   await farmController.transferOwnership(clientAddr);
 
