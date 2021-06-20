@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { BigNumber, Contract } from "ethers";
+import { IFarmData } from "../components/types";
 
 type Web3ContextProps = {
   balance?: BigNumber;
@@ -15,7 +16,7 @@ export const Web3Context = createContext<Partial<Web3ContextProps>>({});
 type ContractsContextProps = {
   contractBonkToken?: Contract;
   contractBonkNFTMinter?: Contract;
-  contractBonkFarms?: Contract[];
+  bonkFarms?: IFarmData[];
 };
 
 export const ContractsContext = createContext<Partial<ContractsContextProps>>(

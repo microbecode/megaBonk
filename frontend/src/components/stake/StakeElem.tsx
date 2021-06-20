@@ -85,8 +85,7 @@ export function StakeElem(props : Props) {
       </Form>
       {isStaking && 
       <>
-        <Row>{earnedBalance.toString()}</Row>
-        <Row>Your mBONK rewards</Row>
+        <Row>Your mBONK rewards: {earnedBalance.toString()}</Row>
         <Row>
         <Button
             variant="primary-outline"

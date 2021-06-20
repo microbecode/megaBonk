@@ -28,6 +28,7 @@ import { Copyright } from "./common/Copyright";
 import { Statistics } from "./statistics/Statistics";
 import { Progress } from "./Progress";
 import { NetworkErrorMessage } from "./NetworkErrorMessage";
+import { IFarmData } from "./types";
 
 // This is the Hardhat Network id, you might change it in the hardhat.config.js
 // Here's a list of network ids https://docs.metamask.io/guide/ethereum-provider.html#properties
@@ -90,7 +91,7 @@ type DappState = {
   bonkToken?: ethers.Contract;
   bonkNFTMinter?: ethers.Contract;
   bonkFarmController?: ethers.Contract;
-  bonkFarms?: ethers.Contract[];
+  bonkFarmsData?: IFarmData[];
 };
 
 export class Dapp extends React.Component<{}, DappState> {
@@ -124,12 +125,12 @@ export class Dapp extends React.Component<{}, DappState> {
       isProcessing,
       bonkToken,
       bonkNFTMinter,
-      bonkFarms
+      bonkFarmsData
     } = this.state;
 
     const contractBonkToken = bonkToken;
     const contractBonkNFTMinter = bonkNFTMinter;
-    const contractBonkFarms = bonkFarms;
+    const bonkFarms = bonkFarmsData;
 
     return (
       <div>
@@ -143,7 +144,7 @@ export class Dapp extends React.Component<{}, DappState> {
             value={{
               contractBonkToken,
               contractBonkNFTMinter,
-              contractBonkFarms
+              bonkFarms
             }}
           >
             <Header
@@ -320,7 +321,7 @@ export class Dapp extends React.Component<{}, DappState> {
       this._provider.getSigner(0)
     );
 
-    let farms : Contract[] = [];
+    let farmsData : IFarmData[] = [];
 
     const farmCount = (await contractFarmController.getFarmsCount()) as number;
     for (let i = 0; i < farmCount; i++) {
@@ -332,13 +333,37 @@ export class Dapp extends React.Component<{}, DappState> {
           this._provider.getSigner(0)
         );
 
-        farms.push(farm);
+        const rewardTokenAddr = await farm.rewardToken();
+        const stakeTokenAddr = await farm.stakeToken();
+
+        const rewardToken = new ethers.Contract(
+          rewardTokenAddr,
+          BonkTokenArtifact.abi,
+          this._provider.getSigner(0),
+        );
+
+        const stakeToken = new ethers.Contract(
+          stakeTokenAddr,
+          BonkTokenArtifact.abi,
+          this._provider.getSigner(0),
+        );
+
+        const rewardTokenName = await rewardToken.name();
+        const stakeTokenName = await rewardToken.name();
+        
+        const farmData : IFarmData = {
+          farm: farm,
+          rewardTokenName: rewardTokenName,
+          stakeTokenName: stakeTokenName
+        };
+
+        farmsData.push(farmData);
     }
 
-    console.log('init farmsssss', farms.length)
+    console.log('init farmsssss', farmsData.length)
 
     this.setState({
-      bonkFarms: farms,
+      bonkFarmsData: farmsData,
     });
   }
 

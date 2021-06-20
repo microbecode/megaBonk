@@ -10,31 +10,32 @@ import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
 import { Notification } from "../Notification";
 import { StakeElem } from "./StakeElem";
 import { StakeFarmElem } from "./StakeFarmElem";
-
+import BonkTokenArtifact from "../../contracts/BonkToken.json";
+import { IFarmData } from "../types";
 
 export function StakeBlock() {
 
-type FarmsStakeNumbers = {
-  stakeBalance: BigNumber,
-  earnedBalance: BigNumber
-}
+  type FarmBalanceSingleData = {
+    stakeBalance: BigNumber,
+    earnedBalance: BigNumber,
+    stakeTokenName: string,
+    rewardTokenName: string
+  }
 
-type FarmsStakeBalance = {
-    [farmAddress: string]: FarmsStakeNumbers;
-}
-
+  type FarmsDataWithBalances = {
+      [farmAddress: string]: FarmBalanceSingleData;
+  }
 
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
-  const [earned, setEarned] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
   //const [farms, setFarms] = useState<ethers.Contract[]>([]);
-  const [farmsBalances, setFarmsBalances] = useState<FarmsStakeBalance>({});
+  const [farmsData, setFarmsData] = useState<FarmsDataWithBalances>({});
 
   const {
     contractBonkToken,
-    contractBonkFarms
+    bonkFarms
   } = useContext(ContractsContext);
   const { selectedAddress, decimals } = useContext(Web3Context);
 
@@ -57,38 +58,49 @@ type FarmsStakeBalance = {
     loadBalances();
   }, [loadBalances, toggleUpdate]);
 
+  //console.log('bonk farms', bonkFarms)
+
   const prepareFarmData = useCallback(async () => {
-    if (!selectedAddress || !contractBonkFarms) {
+    if (!selectedAddress || !bonkFarms) {
         return;
     }
 
-    let farmsBalances : FarmsStakeBalance = {};
-    console.log('starting', contractBonkFarms.length)  
-    for (let i = 0; i < contractBonkFarms.length; i++) {
-        const stakeBalance = await contractBonkFarms[i].balanceOf(selectedAddress);
-        const earnedBalance = await contractBonkFarms[i].earned(selectedAddress);
-        const data : FarmsStakeNumbers = { stakeBalance, earnedBalance };
+    let farmsData : FarmsDataWithBalances = {};
+    console.log('starting', bonkFarms.length)  
+    for (let i = 0; i < bonkFarms.length; i++) {
+        const stakeBalance = await bonkFarms[i].farm.balanceOf(selectedAddress);
+        const earnedBalance = await bonkFarms[i].farm.earned(selectedAddress);
+        const rewardTokenName = await bonkFarms[i].rewardTokenName;
+        const stakeTokenName = await bonkFarms[i].stakeTokenName;
+
+
+        const data : FarmBalanceSingleData = { 
+          stakeBalance, 
+          earnedBalance,
+          rewardTokenName,
+          stakeTokenName
+         };
         console.log('found stake bal', data.stakeBalance.toString(), data.earnedBalance.toString() )
-        farmsBalances[contractBonkFarms[i].address] = data;
+        farmsData[bonkFarms[i].farm.address] = data;
     }
     
-    console.log('farm balances', farmsBalances, contractBonkFarms);
+    console.log('farm balances', farmsData, bonkFarms);
     
-    setFarmsBalances(farmsBalances);
-  }, [selectedAddress, contractBonkFarms, setFarmsBalances]);
+    setFarmsData(farmsData);
+  }, [selectedAddress, bonkFarms, setFarmsData]);
 
   useEffect(() => {
     prepareFarmData();
-  }, [prepareFarmData, setFarmsBalances, contractBonkFarms, toggleUpdate]);
+  }, [prepareFarmData, setFarmsData, bonkFarms, toggleUpdate]);
 
-/*   if (farmsBalances) {
-    console.log(farmsBalances, farmsBalances.keys, farmsBalances, Object.keys(farmsBalances))
-  } */
+   if (farmsData) {
+    console.log('temp', farmsData, farmsData.keys, Object.keys(farmsData))
+  } 
 
 
   const onStake = async (farmIndex : number, amount : BigNumber) => {
-    console.log('farms', contractBonkFarms[0], farmIndex)
-    const farm = contractBonkFarms[farmIndex];
+    console.log('farms', bonkFarms[farmIndex], farmIndex)
+    const farm = bonkFarms[farmIndex].farm;
     console.log('sending approve', farm.address, amount.toString());
 
     const txApprove = await contractBonkToken.approve(farm.address, amount);
@@ -111,7 +123,7 @@ type FarmsStakeBalance = {
   }
 
   const onUnstake = async (farmIndex : number, amount : BigNumber) => {
-    const farm = contractBonkFarms[farmIndex];
+    const farm = bonkFarms[farmIndex].farm;
 
     const stakeTx = await farm.withdraw(amount);
     setWaitHash(stakeTx.hash);
@@ -126,7 +138,7 @@ type FarmsStakeBalance = {
   }
 
   const onCollect = async (farmIndex : number) => {
-    const farm = contractBonkFarms[farmIndex];
+    const farm = bonkFarms[farmIndex].farm;
     const tx = await farm.getReward();
     setWaitHash(tx.hash);
     console.log('collect tx stake', tx)
@@ -139,9 +151,11 @@ type FarmsStakeBalance = {
     console.log('collect update set')
   }
 
-  const getFarmElem = (farm : Contract, index : number) => {
+  const getFarmElem = (farmData : IFarmData, index : number) => {
    // console.log('stake balance', farm)
-    const stakeBalance = farmsBalances[farm.address];
+    const stakeBalance = farmsData[farmData.farm.address];
+
+    const pairName = farmData.stakeTokenName + ' / ' + farmData.rewardTokenName;
 
     return (<Row key={index}>
         <Col>
@@ -153,6 +167,7 @@ type FarmsStakeBalance = {
             onUnstake={onUnstake} 
             farmIndex={index}
             onCollect={onCollect}
+            pairName={pairName}
           ></StakeFarmElem>
         </Col>
     {/*   <Col>
@@ -161,13 +176,14 @@ type FarmsStakeBalance = {
     </Row>)
   }
 
+
   return (
     <div className="bonked">
       {waitHash && <WaitingForTransactionMessage txHash={waitHash}></WaitingForTransactionMessage> }
       {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="stake">
         <Container fluid>
-          {farmsBalances && Object.keys(farmsBalances).length > 0 && contractBonkFarms.map((farm, i) => getFarmElem(farm, i) )}        
+          {farmsData && Object.keys(farmsData).length > 0 && bonkFarms.map((farmData, i) => getFarmElem(farmData, i) )}        
         </Container>
       </div>
     </div>
