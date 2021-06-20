@@ -94,9 +94,6 @@ async function main() {
 
   const farmTx = await farmController.addFarm(rewardToken.address, { gasLimit: 2000000} );
   await farmTx.wait();
-/*   if (network.name === "Ropsten") {
-    await delay(60000); // Unsure why this is needed for Ropsten - locally everything works fine
-  } */
   
   console.log('count', ( await farmController.getFarmsCount()).toString());  
   const farmAddr = await farmController.getFarm(0);
@@ -214,7 +211,7 @@ const verifyContracts = async (
   farmAddr: string
 ) => {
   if (network.name !== "hardhat" && network.name !== "localhost") {
-    console.log('Waiting for the contract to be distributed in Etherscan...')
+    console.log('Waiting for the contracts to be distributed in Etherscan...')
     
     await delay(30000); 
     
