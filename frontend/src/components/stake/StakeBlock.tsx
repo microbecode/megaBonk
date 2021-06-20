@@ -125,13 +125,35 @@ type FarmsStakeBalance = {
     console.log('unstake update set')
   }
 
+  const onCollect = async (farmIndex : number) => {
+    const farm = contractBonkFarms[farmIndex];
+    const tx = await farm.getReward();
+    setWaitHash(tx.hash);
+    console.log('collect tx stake', tx)
+    await tx.wait();
+    setWaitHash(null);
+
+    setSuccessText("You have collected your staking rewards");
+
+    setToggleUpdate(!toggleUpdate);
+    console.log('collect update set')
+  }
+
   const getFarmElem = (farm : Contract, index : number) => {
    // console.log('stake balance', farm)
     const stakeBalance = farmsBalances[farm.address];
 
     return (<Row key={index}>
         <Col>
-        <StakeFarmElem balance={balance} stakeBalance={stakeBalance.stakeBalance} earnedBalance={stakeBalance.earnedBalance} onStake={onStake} onUnstake={onUnstake} farmIndex={index}></StakeFarmElem>
+          <StakeFarmElem 
+            balance={balance} 
+            stakeBalance={stakeBalance.stakeBalance} 
+            earnedBalance={stakeBalance.earnedBalance} 
+            onStake={onStake} 
+            onUnstake={onUnstake} 
+            farmIndex={index}
+            onCollect={onCollect}
+          ></StakeFarmElem>
         </Col>
     {/*   <Col>
         <StakeElem balance={balance}></StakeElem>

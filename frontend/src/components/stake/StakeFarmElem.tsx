@@ -16,11 +16,12 @@ interface Props {
   earnedBalance: BigNumber,
   onStake: (farmIndex : number, tokens : BigNumber) => void,
   onUnstake: (farmIndex : number, tokens : BigNumber) => void,
+  onCollect: (farmIndex : number) => void,
   farmIndex : number
 }
 
 export function StakeFarmElem(props : Props) {
-  const { balance, stakeBalance, earnedBalance, onStake, onUnstake, farmIndex } = props;
+  const { balance, stakeBalance, earnedBalance, onStake, onUnstake, onCollect, farmIndex } = props;
 
   const onFarmStake = (amount : BigNumber) => {
     onStake(farmIndex, amount);
@@ -30,14 +31,30 @@ export function StakeFarmElem(props : Props) {
     onUnstake(farmIndex, amount);
   }
 
+  const onFarmCollect = () => {
+    onCollect(farmIndex);
+  }
+
   return (
     <Container fluid>
       <Row>
         <Col>
-          <StakeElem balance={balance} earnedBalance={earnedBalance} onFarmStake={onFarmStake} isStaking={true}></StakeElem>
+          <StakeElem 
+            balance={balance} 
+            earnedBalance={earnedBalance}
+            onFarmStake={onFarmStake} 
+            isStaking={true}
+            onCollect={onFarmCollect}
+          ></StakeElem>
         </Col>
          <Col>
-          <StakeElem balance={stakeBalance} earnedBalance={earnedBalance} onFarmStake={onFarmUnstake} isStaking={false}></StakeElem>
+            <StakeElem 
+              balance={stakeBalance} 
+              earnedBalance={earnedBalance} 
+              onFarmStake={onFarmUnstake} 
+              isStaking={false}
+              onCollect={() => {}}
+            ></StakeElem>
         </Col>
       </Row>
     </Container>
