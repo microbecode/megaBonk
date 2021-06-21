@@ -14,9 +14,9 @@ interface Props {
   balance: BigNumber,
   stakeBalance: BigNumber,
   earnedBalance: BigNumber,
-  onStake: (farmIndex : number, tokens : BigNumber) => void,
-  onUnstake: (farmIndex : number, tokens : BigNumber) => void,
-  onCollect: (farmIndex : number) => void,
+  onStake: (tokens : BigNumber) => void,
+  onUnstake: (tokens : BigNumber) => void,
+  onCollect: () => void,
   farmIndex : number,
   pairName : string
 }
@@ -34,15 +34,15 @@ export function StakeFarmElem(props : Props) {
   } = props;
 
   const onFarmStake = (amount : BigNumber) => {
-    onStake(farmIndex, amount);
+    onStake(amount);
   }
 
   const onFarmUnstake = (amount : BigNumber) => {
-    onUnstake(farmIndex, amount);
+    onUnstake(amount);
   }
 
   const onFarmCollect = () => {
-    onCollect(farmIndex);
+    onCollect();
   }
 
   return (
