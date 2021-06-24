@@ -14,11 +14,12 @@ interface Props {
   earnedBalance: BigNumber,
   onFarmStake: (tokens : BigNumber) => void,
   onCollect: () => void,
-  isStaking: boolean
+  isStaking: boolean,
+  disabled: boolean
 }
 
 export function StakeElem(props : Props) {
-  const { balance, earnedBalance, onFarmStake, isStaking, onCollect } = props;
+  const { balance, earnedBalance, onFarmStake, isStaking, onCollect, disabled } = props;
 
   const [tokensSelected, setTokensSelected] = useState<BigNumber>(ethers.BigNumber.from('0'));
 
@@ -32,6 +33,7 @@ export function StakeElem(props : Props) {
     //const display = ethers.utils.formatUnits(absolute, 18);
     setTokensSelected(absolute);
   }
+
 
 // ethers.utils.formatUnits(balance, 18)
   return (
@@ -77,6 +79,7 @@ export function StakeElem(props : Props) {
             type="submit"
             className="bonk-btn arrow"
             onClick={(e) => { e.preventDefault(); onFarmStake(tokensSelected); }}
+            disabled={disabled}
           >
             {isStaking ? 'Stake' : 'Unstake'}
           </Button>
@@ -92,6 +95,7 @@ export function StakeElem(props : Props) {
             type="submit"
             className="bonk-btn arrow"
             onClick={(e) => { e.preventDefault(); onCollect(); }}
+            disabled={disabled}
           >
             Collect
           </Button>

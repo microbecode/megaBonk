@@ -109,6 +109,14 @@ export class Dapp extends React.Component<{}, DappState> {
     networkError: undefined,
     isDarkTheme: undefined,
     isProcessing: undefined,
+    bonkFarmsData: {
+      farm1: {
+        farmName: 'mBONK / mBONK Rewards'
+      },
+      farm2: {
+        farmName: 'Gnome underwear farm'
+      }
+    }
   };
 
   constructor(props: any) {
@@ -331,11 +339,11 @@ export class Dapp extends React.Component<{}, DappState> {
     {
       farm1: {
         farm: farm1,
-        farmName: 'abc'
+        farmName: this.state.bonkFarmsData.farm1.farmName
       },
       farm2: {
         farm: farm2,
-        farmName: 'tyu'
+        farmName: this.state.bonkFarmsData.farm2.farmName
       }
     }
     /*

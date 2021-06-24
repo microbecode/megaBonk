@@ -6,7 +6,7 @@ export interface IFarms {
 }
 
 export interface IFarmData {
-    farm: Contract,
+    farm?: Contract,
     farmName: string,
     stakeBalance?: BigNumber,
     earnedBalance?: BigNumber
