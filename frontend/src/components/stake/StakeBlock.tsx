@@ -15,23 +15,24 @@ import { IFarmData } from "../types";
 
 export function StakeBlock() {
 
-  type FarmBalanceSingleData = {
+/*   type FarmBalanceSingleData = {
     stakeBalance: BigNumber,
     earnedBalance: BigNumber,
-    stakeTokenName: string,
-    rewardTokenName: string
+    farmName: string
   }
 
   type FarmsDataWithBalances = {
-      [farmAddress: string]: FarmBalanceSingleData;
-  }
+    farm1: FarmBalanceSingleData,
+    farm2: FarmBalanceSingleData
+      //[farmAddress: string]: FarmBalanceSingleData;
+  } */
 
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
   //const [farms, setFarms] = useState<ethers.Contract[]>([]);
-  const [farmsData, setFarmsData] = useState<FarmsDataWithBalances>({});
+/*   const [farmsData, setFarmsData] = useState<FarmsDataWithBalances>(); */
 
   const {
     contractBonkToken,
@@ -65,13 +66,24 @@ export function StakeBlock() {
         return;
     }
 
-    let farmsData : FarmsDataWithBalances = {};
-    console.log('starting', bonkFarms.length)  
+    const setFarmBalances = async (farm : IFarmData) =>  {
+      const stakeBalance = await farm.farm.balanceOf(selectedAddress);
+      const earnedBalance = await farm.farm.earned(selectedAddress);
+      farm.earnedBalance = earnedBalance;
+      farm.stakeBalance = stakeBalance;
+    }
+
+    await setFarmBalances(bonkFarms.farm1);
+    await setFarmBalances(bonkFarms.farm2);
+
+    console.log('ending', bonkFarms)  
+
+    /*
     for (let i = 0; i < bonkFarms.length; i++) {
         const stakeBalance = await bonkFarms[i].farm.balanceOf(selectedAddress);
         const earnedBalance = await bonkFarms[i].farm.earned(selectedAddress);
-        const rewardTokenName = await bonkFarms[i].rewardTokenName;
-        const stakeTokenName = await bonkFarms[i].stakeTokenName;
+         const rewardTokenName = await bonkFarms[i].rewardTokenName;
+        const stakeTokenName = await bonkFarms[i].stakeTokenName; 
 
 
         const data : FarmBalanceSingleData = { 
@@ -83,24 +95,23 @@ export function StakeBlock() {
         console.log('found stake bal', data.stakeBalance.toString(), data.earnedBalance.toString() )
         farmsData[bonkFarms[i].farm.address] = data;
     }
+    */
+/*     console.log('farm balances', farmsData, bonkFarms); */
     
-    console.log('farm balances', farmsData, bonkFarms);
-    
-    setFarmsData(farmsData);
-  }, [selectedAddress, bonkFarms, setFarmsData]);
+/*     setFarmsData(farmsData); */
+  }, [selectedAddress, bonkFarms]);
 
   useEffect(() => {
     prepareFarmData();
-  }, [prepareFarmData, setFarmsData, bonkFarms, toggleUpdate]);
+  }, [prepareFarmData, bonkFarms, toggleUpdate]);
 
-   if (farmsData) {
+ /*   if (farmsData) {
     console.log('temp', farmsData, farmsData.keys, Object.keys(farmsData))
-  } 
+  }  */
 
 
-  const onStake = async (farmIndex : number, amount : BigNumber) => {
-    console.log('farms', bonkFarms[farmIndex], farmIndex)
-    const farm = bonkFarms[farmIndex].farm;
+  const onStake = async (farmdata : IFarmData, amount : BigNumber) => {
+    const farm = farmdata.farm;
     console.log('sending approve', farm.address, amount.toString());
 
     const txApprove = await contractBonkToken.approve(farm.address, amount);
@@ -122,10 +133,8 @@ export function StakeBlock() {
     console.log('update set')
   }
 
-  const onUnstake = async (farmIndex : number, amount : BigNumber) => {
-    const farm = bonkFarms[farmIndex].farm;
-
-    const stakeTx = await farm.withdraw(amount);
+  const onUnstake = async (farmdata : IFarmData, amount : BigNumber) => {
+    const stakeTx = await farmdata.farm.withdraw(amount);
     setWaitHash(stakeTx.hash);
     console.log('unstake tx stake', stakeTx)
     await stakeTx.wait();
@@ -137,9 +146,8 @@ export function StakeBlock() {
     console.log('unstake update set')
   }
 
-  const onCollect = async (farmIndex : number) => {
-    const farm = bonkFarms[farmIndex].farm;
-    const tx = await farm.getReward();
+  const onCollect = async (farmdata : IFarmData) => {
+    const tx = await farmdata.farm.getReward();
     setWaitHash(tx.hash);
     console.log('collect tx stake', tx)
     await tx.wait();
@@ -151,28 +159,22 @@ export function StakeBlock() {
     console.log('collect update set')
   }
 
-  const getFarmElem = (farmData : IFarmData, index : number) => {
+  const getFarmElem = (data : IFarmData) => {
    // console.log('stake balance', farm)
-    const stakeBalance = farmsData[farmData.farm.address];
 
-    const pairName = farmData.stakeTokenName + ' / ' + farmData.rewardTokenName;
-
-    return (<Row key={index}>
+    return (
+    <Row>
         <Col>
           <StakeFarmElem 
             balance={balance} 
-            stakeBalance={stakeBalance.stakeBalance} 
-            earnedBalance={stakeBalance.earnedBalance} 
-            onStake={onStake} 
-            onUnstake={onUnstake} 
-            farmIndex={index}
-            onCollect={onCollect}
-            pairName={pairName}
+            stakeBalance={data.stakeBalance} 
+            earnedBalance={data.earnedBalance} 
+            onStake={(amount) => onStake(data, amount)} 
+            onUnstake={(amount) => onUnstake(data, amount)} 
+            onCollect={() => onCollect(data)}
+            farmName={data.farmName}
           ></StakeFarmElem>
         </Col>
-    {/*   <Col>
-        <StakeElem balance={balance}></StakeElem>
-        </Col> */}
     </Row>)
   }
 
@@ -183,7 +185,23 @@ export function StakeBlock() {
       {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="stake">
         <Container fluid>
-          {farmsData && Object.keys(farmsData).length > 0 && bonkFarms.map((farmData, i) => getFarmElem(farmData, i) )}        
+          {bonkFarms && bonkFarms.farm1 && getFarmElem(bonkFarms.farm1)}
+          {bonkFarms && bonkFarms.farm2 && getFarmElem(bonkFarms.farm2)}
+{/*           <Row>
+            <Col>
+              <StakeFarmElem 
+                balance={balance} 
+                stakeBalance={stakeBalance.stakeBalance} 
+                earnedBalance={stakeBalance.earnedBalance} 
+                onStake={(amount : BigNumber) => onStake(0, amount)} 
+                onUnstake={(amount : BigNumber) => onUnstake(0, amount)} 
+                farmIndex={0}
+                onCollect={() => onCollect(0)}
+                pairName='some name'
+              ></StakeFarmElem>
+            </Col>
+          </Row>) */}
+{/*           {farmsData && Object.keys(farmsData).length > 0 && bonkFarms.map((farmData, i) => getFarmElem(farmData, i) )} */}        
         </Container>
       </div>
     </div>

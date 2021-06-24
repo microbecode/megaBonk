@@ -28,7 +28,7 @@ import { Copyright } from "./common/Copyright";
 import { Statistics } from "./statistics/Statistics";
 import { Progress } from "./Progress";
 import { NetworkErrorMessage } from "./NetworkErrorMessage";
-import { IFarmData } from "./types";
+import { IFarmData, IFarms } from "./types";
 
 // This is the Hardhat Network id, you might change it in the hardhat.config.js
 // Here's a list of network ids https://docs.metamask.io/guide/ethereum-provider.html#properties
@@ -91,7 +91,7 @@ type DappState = {
   bonkToken?: ethers.Contract;
   bonkNFTMinter?: ethers.Contract;
   bonkFarmController?: ethers.Contract;
-  bonkFarmsData?: IFarmData[];
+  bonkFarmsData?: IFarms;
 };
 
 export class Dapp extends React.Component<{}, DappState> {
@@ -315,13 +315,38 @@ export class Dapp extends React.Component<{}, DappState> {
       ),
     });
 
+    const farm1 = new ethers.Contract(
+      contractAddress.Farm1,
+      BonkFarmArtifact.abi,
+      this._provider.getSigner(0)
+    );
+
+    const farm2 = new ethers.Contract(
+      contractAddress.Farm2,
+      BonkFarmArtifact.abi,
+      this._provider.getSigner(0)
+    );
+
+    let farmsData : IFarms = 
+    {
+      farm1: {
+        farm: farm1,
+        farmName: 'abc'
+      },
+      farm2: {
+        farm: farm2,
+        farmName: 'tyu'
+      }
+    }
+    /*
+
     const contractFarmController = new ethers.Contract(
       contractAddress.FarmController,
       BonkFarmControllerArtifact.abi,
       this._provider.getSigner(0)
     );
 
-    let farmsData : IFarmData[] = [];
+    
 
     const farmCount = (await contractFarmController.getFarmsCount()) as number;
     for (let i = 0; i < farmCount; i++) {
@@ -352,15 +377,14 @@ export class Dapp extends React.Component<{}, DappState> {
         const stakeTokenName = await rewardToken.name();
         
         const farmData : IFarmData = {
-          farm: farm,
-          rewardTokenName: rewardTokenName,
-          stakeTokenName: stakeTokenName
+          farm: farm
         };
 
         farmsData.push(farmData);
     }
+    */
 
-    console.log('init farmsssss', farmsData.length)
+    console.log('init farmsssss', farmsData)
 
     this.setState({
       bonkFarmsData: farmsData,

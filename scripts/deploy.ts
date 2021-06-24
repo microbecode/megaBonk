@@ -130,7 +130,9 @@ async function main() {
     minterAddr,
     farmController.address,
     farm1StakeAddr,
-    farm2StakeAddr
+    farm2StakeAddr,
+    farm1Addr,
+    farm2Addr
   );
 
   await verifyContracts(
@@ -152,7 +154,9 @@ async function saveFrontendFiles(
   bonkNftMinterAddr: string,
   farmControllerAddr: string, 
   farm1StakeAddr: string,
-  farm2StakeAddr: string
+  farm2StakeAddr: string,
+  farm1Addr: string,
+  farm2Addr: string
 ) {
   const contractsDir = __dirname + "/../frontend/src/contracts";
 
@@ -168,6 +172,8 @@ async function saveFrontendFiles(
         BonkNftMinter: bonkNftMinterAddr, 
         Farm1StakeToken: farm1StakeAddr,
         Farm2StakeToken: farm2StakeAddr,
+        Farm1: farm1Addr,
+        Farm2: farm2Addr,
         FarmController: farmControllerAddr
       },
       undefined,

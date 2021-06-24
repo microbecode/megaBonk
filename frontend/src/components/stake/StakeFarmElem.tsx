@@ -17,8 +17,7 @@ interface Props {
   onStake: (tokens : BigNumber) => void,
   onUnstake: (tokens : BigNumber) => void,
   onCollect: () => void,
-  farmIndex : number,
-  pairName : string
+  farmName : string
 }
 
 export function StakeFarmElem(props : Props) {
@@ -29,8 +28,7 @@ export function StakeFarmElem(props : Props) {
     onStake, 
     onUnstake, 
     onCollect, 
-    farmIndex, 
-    pairName 
+    farmName 
   } = props;
 
   const onFarmStake = (amount : BigNumber) => {
@@ -48,7 +46,7 @@ export function StakeFarmElem(props : Props) {
   return (
     <Container fluid>
       <Row>
-        <h3>Farm: {pairName}</h3>
+        <h3>Farm: {farmName}</h3>
       </Row>
       <Row>
         <Col>
