@@ -8,6 +8,8 @@ export interface IFarms {
 export interface IFarmData {
     farm?: Contract,
     farmName: string,
+    stakeToken?: Contract,
+    tokenBalance?: BigNumber,
     stakeBalance?: BigNumber,
     earnedBalance?: BigNumber
 }

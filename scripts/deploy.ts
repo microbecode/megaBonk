@@ -77,21 +77,16 @@ async function main() {
     const NEW_FEE = ethers.utils.parseUnits("99", 16); // 0.99 BONK fee
     await bonkNftMinter.setBonkFee(NEW_FEE);
 
-    
-    
-
-    // Deploy tokens for staking
-    const stakeToken1 = await MockERC20.deploy("Wannabe-mBonk", "MB");
-    await stakeToken1.deployed();    
-    await stakeToken1.getFreeTokens(clientAddr, tenTokens);
+    // Deploy other for staking
 
     const stakeToken2 = await MockERC20.deploy("Wannabe-LPtoken", "LP");
     await stakeToken2.deployed();
     await stakeToken2.getFreeTokens(clientAddr, tenTokens);
+    await stakeToken2.getFreeTokens(owner, tenTokens);
 
-    console.log("stakeToken1 address:", stakeToken1.address, "stakeToken2 address:", stakeToken2.address);
+    console.log("stakeToken1 address:", farmRewardAddr, "stakeToken2 address:", stakeToken2.address);
 
-    farm1StakeAddr = stakeToken1.address;
+    farm1StakeAddr = farmRewardAddr;
     farm2StakeAddr = stakeToken2.address;
   }
 

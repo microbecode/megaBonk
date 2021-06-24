@@ -329,9 +329,21 @@ export class Dapp extends React.Component<{}, DappState> {
       this._provider.getSigner(0)
     );
 
+    const farm1StakeToken = new ethers.Contract(
+      contractAddress.Farm1StakeToken,
+      BonkTokenArtifact.abi,
+      this._provider.getSigner(0)
+    );
+
     const farm2 = new ethers.Contract(
       contractAddress.Farm2,
       BonkFarmArtifact.abi,
+      this._provider.getSigner(0)
+    );
+
+    const farm2StakeToken = new ethers.Contract(
+      contractAddress.Farm2StakeToken,
+      BonkTokenArtifact.abi,
       this._provider.getSigner(0)
     );
 
@@ -339,10 +351,12 @@ export class Dapp extends React.Component<{}, DappState> {
     {
       farm1: {
         farm: farm1,
+        stakeToken: farm1StakeToken,
         farmName: this.state.bonkFarmsData.farm1.farmName
       },
       farm2: {
         farm: farm2,
+        stakeToken: farm2StakeToken,
         farmName: this.state.bonkFarmsData.farm2.farmName
       }
     }

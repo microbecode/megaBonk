@@ -67,8 +67,18 @@ console.log('hmmmm', contractBonkToken)
     }
 
     const setFarmBalances = async (farm : IFarmData) =>  {
-      const stakeBalance = (farm.farm ? await farm.farm.balanceOf(selectedAddress) : ethers.BigNumber.from("0"))
-      const earnedBalance = (farm.farm ? await farm.farm.earned(selectedAddress) : ethers.BigNumber.from("0"))
+      
+      let tokenBalance = ethers.BigNumber.from("0");
+      let stakeBalance = ethers.BigNumber.from("0");
+      let earnedBalance = ethers.BigNumber.from("0");
+
+      if (farm.farm) {
+        tokenBalance = await farm.stakeToken.balanceOf(selectedAddress);
+        stakeBalance = await farm.farm.balanceOf(selectedAddress);
+        earnedBalance = await farm.farm.earned(selectedAddress);
+      }
+
+      farm.tokenBalance = tokenBalance;
       farm.earnedBalance = earnedBalance;
       farm.stakeBalance = stakeBalance;
     }
@@ -88,14 +98,12 @@ console.log('hmmmm', contractBonkToken)
     const farm = farmdata.farm;
     console.log('sending approve', farm.address, amount.toString());
 
-    const txApprove = await contractBonkToken.approve(farm.address, amount);
+    const txApprove = await farmdata.stakeToken.approve(farm.address, amount);
 
     setWaitHash(txApprove.hash);
     console.log('tx approve', txApprove)
     await txApprove.wait();
     setWaitHash(null);
-
-    console.log('sent approve')
 
     const stakeTx = await farm.stake(amount);
     setWaitHash(stakeTx.hash);
@@ -110,7 +118,7 @@ console.log('hmmmm', contractBonkToken)
   }
 
   const onUnstake = async (farmdata : IFarmData, amount : BigNumber) => {
-    const stakeTx = await farmdata.farm.withdraw(amount);
+    const stakeTx = await farmdata.farm.getReward(amount);
     setWaitHash(stakeTx.hash);
     console.log('unstake tx stake', stakeTx)
     await stakeTx.wait();
@@ -142,7 +150,7 @@ console.log('hmmmm', contractBonkToken)
     <Row>
         <Col>
           <StakeFarmElem 
-            balance={balance} 
+            balance={data.tokenBalance ?? ethers.BigNumber.from('0')} 
             stakeBalance={data.stakeBalance ?? ethers.BigNumber.from('0')} 
             earnedBalance={data.earnedBalance ?? ethers.BigNumber.from('0')} 
             onStake={(amount) => onStake(data, amount)} 
