@@ -134,7 +134,6 @@ async function main() {
     farmRewardAddr,
     minterAddr,
     farmController.address,
-    farm1StakeAddr,
     farm2StakeAddr,
     farm1Addr,
     farm2Addr,
@@ -208,7 +207,6 @@ const verifyContracts = async (
   rewardTokenAddr: string,
   bonkNftMinterAddr: string,
   farmControllerAddr: string, 
-  farm1StakeAddr: string,
   farm2StakeAddr: string,
   farm1Addr: string,
   farm2Addr: string,
@@ -235,11 +233,6 @@ const verifyContracts = async (
       address: rewardTokenAddr,
       constructorArguments: ["BONK Token v2", "megaBONK", "4000000"]
     });   
-
-    await hre.run("verify:verify", {
-      address: farm1StakeAddr,
-      constructorArguments: ["Wannabe-mBonk", "MB"]
-    }); 
 
     await hre.run("verify:verify", {
       address: farm2StakeAddr,
