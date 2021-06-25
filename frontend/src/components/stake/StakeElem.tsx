@@ -1,13 +1,7 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import sampleNFT from "../../images/nft_sample.png";
-import transparentImg from "../../images/transparent.png";
+import { useState } from "react";
 import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
-import "../../styles/createNFT.scss";
-import axios from "axios";
-import { ContractsContext, Web3Context } from "../../contexts/Context";
 import { BigNumber, ethers } from "ethers";
-import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
-import { Notification } from "../Notification";
+import "../../styles/staking.scss";
 
 interface Props {
   balance: BigNumber,
@@ -15,11 +9,20 @@ interface Props {
   onFarmStake: (tokens : BigNumber) => void,
   onCollect: () => void,
   isStaking: boolean,
-  disabled: boolean
+  disabled: boolean,
+  stakeTokenDisplayName: string
 }
 
 export function StakeElem(props : Props) {
-  const { balance, earnedBalance, onFarmStake, isStaking, onCollect, disabled } = props;
+  const { 
+    balance, 
+    earnedBalance, 
+    onFarmStake, 
+    isStaking, 
+    onCollect, 
+    disabled, 
+    stakeTokenDisplayName 
+  } = props;
 
   const [tokensSelected, setTokensSelected] = useState<BigNumber>(ethers.BigNumber.from('0'));
 
@@ -40,29 +43,28 @@ export function StakeElem(props : Props) {
     <Container fluid>
       <Row>
         <Col>
-          {isStaking ? 'Stake' : 'Unstake'} mBONK
+          {isStaking ? 'Stake' : 'Unstake'} {stakeTokenDisplayName}
         </Col>
       </Row>
       <Row>
         <Col>
-          Balance: {balance ? balance.toString() : 0 }
+        {isStaking ? 'Balance' : 'Staked balance'}: {balance ? balance.toString() : 0 }
         </Col>
       </Row>
-      <Form onSubmit={() => {}}>
+      <Form onSubmit={() => {}} className="form-group">
         <Row>   
         <Col>   
-          <Form.Group controlId="stakeAmount">
+          <Form.Group controlId="stakeAmount" >
             
             <Form.Control
               type="text"
-              placeholder={"Insert mBONK to " + (isStaking ? "stake" : "unstake")}
               required
               value={tokensSelected.toString()}
               onChange={e => changeTokenAmount(e)}
             />
             </Form.Group>
               </Col>
-              <Col>
+              <Col className="helptext">
                 <a
                 href="#stake"
                 rel="noopener noreferrer"
@@ -88,7 +90,7 @@ export function StakeElem(props : Props) {
       </Form>
       {isStaking && 
       <>
-        <Row>Your mBONK rewards: {earnedBalance.toString()}</Row>
+        <Row>Your {stakeTokenDisplayName} rewards: {earnedBalance.toString()}</Row>
         <Row>
         <Button
             variant="primary-outline"

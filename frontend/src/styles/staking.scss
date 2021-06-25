@@ -4,6 +4,11 @@
   .form-group {
     position: relative;
 
+    .helptext {
+      top: 50%;
+      transform: translateY(25%);
+    }
+
     .max-text {
       position: absolute;
       display: inline-block;

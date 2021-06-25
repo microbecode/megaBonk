@@ -12,27 +12,14 @@ import { StakeElem } from "./StakeElem";
 import { StakeFarmElem } from "./StakeFarmElem";
 import BonkTokenArtifact from "../../contracts/BonkToken.json";
 import { IFarmData } from "../types";
+import "../../styles/staking.scss";
 
 export function StakeBlock() {
-
-/*   type FarmBalanceSingleData = {
-    stakeBalance: BigNumber,
-    earnedBalance: BigNumber,
-    farmName: string
-  }
-
-  type FarmsDataWithBalances = {
-    farm1: FarmBalanceSingleData,
-    farm2: FarmBalanceSingleData
-      //[farmAddress: string]: FarmBalanceSingleData;
-  } */
 
   const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
-  //const [farms, setFarms] = useState<ethers.Contract[]>([]);
-/*   const [farmsData, setFarmsData] = useState<FarmsDataWithBalances>(); */
 
   const {
     contractBonkToken,
@@ -41,14 +28,13 @@ export function StakeBlock() {
   const { selectedAddress, decimals } = useContext(Web3Context);
 
   const loadBalances = useCallback(async () => {
-    console.log('starting load balance' , selectedAddress, contractBonkToken, decimals)
     if (
       !selectedAddress ||
       !contractBonkToken ||
       !decimals
     )
       return;
-console.log('hmmmm', contractBonkToken)
+
     const bonkBalance = await contractBonkToken.balanceOf(selectedAddress);
     console.log('my address ' + selectedAddress + ' has tokens: ' + bonkBalance.toString(), 'token addr ' + contractBonkToken.address)
 
@@ -111,7 +97,7 @@ console.log('hmmmm', contractBonkToken)
     await stakeTx.wait();
     setWaitHash(null);
 
-    setSuccessText("Congratulations! You have staked some tokens " + amount.toString());
+    setSuccessText("You have successfully staked " + amount.toString() + " tokens");
 
     setToggleUpdate(!toggleUpdate);
     console.log('update set')
@@ -124,7 +110,7 @@ console.log('hmmmm', contractBonkToken)
     await stakeTx.wait();
     setWaitHash(null);
 
-    setSuccessText("Congratulations! You have unstaked some tokens " + amount.toString());
+    setSuccessText("You have successfully unstaked " + amount.toString() + " tokens");
 
     setToggleUpdate(!toggleUpdate);
     console.log('unstake update set')
@@ -158,6 +144,7 @@ console.log('hmmmm', contractBonkToken)
             onCollect={() => onCollect(data)}
             farmName={data.farmName}
             disabled={!data.farm}
+            stakeTokenDisplayName={data.stakeTokenDisplayName}
           ></StakeFarmElem>
         </Col>
     </Row>)
@@ -169,24 +156,10 @@ console.log('hmmmm', contractBonkToken)
       {waitHash && <WaitingForTransactionMessage txHash={waitHash}></WaitingForTransactionMessage> }
       {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="stake">
-        <Container fluid>
+        <Container fluid className="staking-container">
           {bonkFarms && bonkFarms.farm1 && getFarmElem(bonkFarms.farm1)}
+          <br/><br/>
           {bonkFarms && bonkFarms.farm2 && getFarmElem(bonkFarms.farm2)}
-{/*           <Row>
-            <Col>
-              <StakeFarmElem 
-                balance={balance} 
-                stakeBalance={stakeBalance.stakeBalance} 
-                earnedBalance={stakeBalance.earnedBalance} 
-                onStake={(amount : BigNumber) => onStake(0, amount)} 
-                onUnstake={(amount : BigNumber) => onUnstake(0, amount)} 
-                farmIndex={0}
-                onCollect={() => onCollect(0)}
-                pairName='some name'
-              ></StakeFarmElem>
-            </Col>
-          </Row>) */}
-{/*           {farmsData && Object.keys(farmsData).length > 0 && bonkFarms.map((farmData, i) => getFarmElem(farmData, i) )} */}        
         </Container>
       </div>
     </div>

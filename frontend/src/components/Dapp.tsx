@@ -111,10 +111,12 @@ export class Dapp extends React.Component<{}, DappState> {
     isProcessing: undefined,
     bonkFarmsData: {
       farm1: {
-        farmName: 'mBONK / mBONK Rewards'
+        farmName: 'mBONK / mBONK Rewards',
+        stakeTokenDisplayName: 'mBonk'
       },
       farm2: {
-        farmName: 'Gnome underwear farm'
+        farmName: 'mBonk LP Rewards',
+        stakeTokenDisplayName: 'mBonk LP'
       }
     }
   };

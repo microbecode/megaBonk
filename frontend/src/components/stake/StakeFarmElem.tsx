@@ -18,6 +18,7 @@ interface Props {
   onUnstake: (tokens : BigNumber) => void,
   onCollect: () => void,
   farmName : string,
+  stakeTokenDisplayName: string,
   disabled: boolean
 }
 
@@ -30,6 +31,7 @@ export function StakeFarmElem(props : Props) {
     onUnstake, 
     onCollect, 
     farmName,
+    stakeTokenDisplayName,
     disabled
   } = props;
 
@@ -59,6 +61,7 @@ export function StakeFarmElem(props : Props) {
             isStaking={true}
             onCollect={onFarmCollect}
             disabled={disabled}
+            stakeTokenDisplayName={stakeTokenDisplayName}
           ></StakeElem>
         </Col>
          <Col>
@@ -69,6 +72,7 @@ export function StakeFarmElem(props : Props) {
               isStaking={false}
               onCollect={() => {}}
               disabled={disabled}
+              stakeTokenDisplayName={stakeTokenDisplayName}
             ></StakeElem>
         </Col>
       </Row>
