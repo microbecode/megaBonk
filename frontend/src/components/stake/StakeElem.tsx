@@ -31,14 +31,28 @@ export function StakeElem(props : Props) {
     setTokensSelected(balance);
   }
 
-  const changeTokenAmount = (e) => {
-    const absolute = ethers.BigNumber.from(e.target.value);
+  const changeTokenAmount = (numberish) => {
+    const absolute = ethers.utils.parseUnits(numberish, 18);
     //const display = ethers.utils.formatUnits(absolute, 18);
     setTokensSelected(absolute);
   }
 
+  const onLocalFarmStake = (amount : BigNumber) => {
+    console.log('farming ', amount.toString())
+    onFarmStake(amount);
+    //changeTokenAmount("0");
+  }
 
-// ethers.utils.formatUnits(balance, 18)
+  const onLocalCollect = () => {
+    onCollect();
+    //changeTokenAmount("0");
+  }
+
+  const format = (amount) => {
+    return ethers.utils.formatUnits(amount, 18);
+  }
+
+// 
   return (
     <Container fluid>
       <Row>
@@ -48,7 +62,7 @@ export function StakeElem(props : Props) {
       </Row>
       <Row>
         <Col>
-        {isStaking ? 'Balance' : 'Staked balance'}: {balance ? balance.toString() : 0 }
+        {isStaking ? 'Balance' : 'Staked balance'}: {balance ? format(balance): 0 }
         </Col>
       </Row>
       <Form onSubmit={() => {}} className="form-group">
@@ -59,8 +73,8 @@ export function StakeElem(props : Props) {
             <Form.Control
               type="text"
               required
-              value={tokensSelected.toString()}
-              onChange={e => changeTokenAmount(e)}
+              value={format(tokensSelected)}
+              onChange={e => changeTokenAmount(e.target.value)}
             />
             </Form.Group>
               </Col>
@@ -80,7 +94,7 @@ export function StakeElem(props : Props) {
             variant="primary-outline"
             type="submit"
             className="bonk-btn arrow"
-            onClick={(e) => { e.preventDefault(); onFarmStake(tokensSelected); }}
+            onClick={(e) => { e.preventDefault(); onLocalFarmStake(tokensSelected); }}
             disabled={disabled}
           >
             {isStaking ? 'Stake' : 'Unstake'}
@@ -90,13 +104,13 @@ export function StakeElem(props : Props) {
       </Form>
       {isStaking && 
       <>
-        <Row>Your {stakeTokenDisplayName} rewards: {earnedBalance.toString()}</Row>
+        <Row>Your {stakeTokenDisplayName} rewards: {format(earnedBalance)}</Row>
         <Row>
         <Button
             variant="primary-outline"
             type="submit"
             className="bonk-btn arrow"
-            onClick={(e) => { e.preventDefault(); onCollect(); }}
+            onClick={(e) => { e.preventDefault(); onLocalCollect(); }}
             disabled={disabled}
           >
             Collect

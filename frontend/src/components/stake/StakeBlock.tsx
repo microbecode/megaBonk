@@ -81,6 +81,7 @@ export function StakeBlock() {
   }, [prepareFarmData, bonkFarms, toggleUpdate]);
 
   const onStake = async (farmdata : IFarmData, amount : BigNumber) => {
+    
     const farm = farmdata.farm;
     console.log('sending approve', farm.address, amount.toString());
 
@@ -104,7 +105,8 @@ export function StakeBlock() {
   }
 
   const onUnstake = async (farmdata : IFarmData, amount : BigNumber) => {
-    const stakeTx = await farmdata.farm.getReward(amount);
+    console.log('starting farm up unstake')
+    const stakeTx = await farmdata.farm.withdraw(amount);
     setWaitHash(stakeTx.hash);
     console.log('unstake tx stake', stakeTx)
     await stakeTx.wait();
