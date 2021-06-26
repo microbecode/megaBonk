@@ -13,10 +13,11 @@ import { StakeFarmElem } from "./StakeFarmElem";
 import BonkTokenArtifact from "../../contracts/BonkToken.json";
 import { IFarmData } from "../types";
 import "../../styles/staking.scss";
+import MegaBonkImg from "../../images/megabonk.png";
+import LpImg from "../../images/lplogo.png";
 
 export function StakeBlock() {
 
-  const [balance, setBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [toggleUpdate, setToggleUpdate] = useState(false);
   const [waitHash, setWaitHash] = useState<string>(null);
   const [successText, setSuccessText] = useState<string>(null);
@@ -26,24 +27,6 @@ export function StakeBlock() {
     bonkFarms
   } = useContext(ContractsContext);
   const { selectedAddress, decimals } = useContext(Web3Context);
-
-  const loadBalances = useCallback(async () => {
-    if (
-      !selectedAddress ||
-      !contractBonkToken ||
-      !decimals
-    )
-      return;
-
-    const bonkBalance = await contractBonkToken.balanceOf(selectedAddress);
-    console.log('my address ' + selectedAddress + ' has tokens: ' + bonkBalance.toString(), 'token addr ' + contractBonkToken.address)
-
-    setBalance(bonkBalance);
-  }, [selectedAddress, contractBonkToken, decimals]);
-
-  useEffect(() => {
-    loadBalances();
-  }, [loadBalances, toggleUpdate]);
 
   //console.log('bonk farms', bonkFarms)
 
@@ -131,7 +114,7 @@ export function StakeBlock() {
     console.log('collect update set')
   }
 
-  const getFarmElem = (data : IFarmData) => {
+  const getFarmElem = (data : IFarmData, logo : string) => {
    // console.log('stake balance', farm)
 
     return (
@@ -145,6 +128,7 @@ export function StakeBlock() {
             onUnstake={(amount) => onUnstake(data, amount)} 
             onCollect={() => onCollect(data)}
             farmName={data.farmName}
+            farmLogo={logo}
             disabled={!data.farm}
             stakeTokenDisplayName={data.stakeTokenDisplayName}
           ></StakeFarmElem>
@@ -159,9 +143,9 @@ export function StakeBlock() {
       {successText && <Notification text={successText}></Notification> }
       <div className="create-container pt-5 pb-0 px-5" id="stake">
         <Container fluid className="staking-container">
-          {bonkFarms && bonkFarms.farm1 && getFarmElem(bonkFarms.farm1)}
+          {bonkFarms && bonkFarms.farm1 && getFarmElem(bonkFarms.farm1, MegaBonkImg)}
           <br/><br/>
-          {bonkFarms && bonkFarms.farm2 && getFarmElem(bonkFarms.farm2)}
+          {bonkFarms && bonkFarms.farm2 && getFarmElem(bonkFarms.farm2, LpImg)}
         </Container>
       </div>
     </div>

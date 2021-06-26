@@ -43,7 +43,7 @@ contract LPFarm is TokenWrapper, IRewardDistributionRecipientTokenOnly {
 
   IERC20 public override rewardToken;
 
-  uint256 public constant DURATION = 7 days;
+  uint256 public constant DURATION = 365 days;
 
   uint256 public periodFinish;
 

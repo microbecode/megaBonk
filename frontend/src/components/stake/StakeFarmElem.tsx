@@ -1,14 +1,7 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import sampleNFT from "../../images/nft_sample.png";
-import transparentImg from "../../images/transparent.png";
-import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
-import "../../styles/createNFT.scss";
-import axios from "axios";
-import { ContractsContext, Web3Context } from "../../contexts/Context";
-import { BigNumber, ethers } from "ethers";
-import { WaitingForTransactionMessage } from "../WaitingForTransactionMessage";
-import { Notification } from "../Notification";
+import { Col, Container, Row } from "react-bootstrap";
+import { BigNumber } from "ethers";
 import { StakeElem } from "./StakeElem";
+
 
 interface Props {
   balance: BigNumber,
@@ -18,6 +11,7 @@ interface Props {
   onUnstake: (tokens : BigNumber) => void,
   onCollect: () => void,
   farmName : string,
+  farmLogo : string,
   stakeTokenDisplayName: string,
   disabled: boolean
 }
@@ -31,6 +25,7 @@ export function StakeFarmElem(props : Props) {
     onUnstake, 
     onCollect, 
     farmName,
+    farmLogo,
     stakeTokenDisplayName,
     disabled
   } = props;
@@ -50,7 +45,10 @@ export function StakeFarmElem(props : Props) {
   return (
     <Container fluid>
       <Row>
+        <Col>
+        <img src={farmLogo} height="50"></img>    
         <h3>Farm: {farmName}</h3>
+        </Col>        
       </Row>
       <Row>
         <Col>
