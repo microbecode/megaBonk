@@ -42,16 +42,10 @@ describe("Farmer", function () {
     await stakeToken.getFreeTokens(notOwner.address, tenTokens);
     await stakeToken.getFreeTokens(notOwner2.address, tenTokens);
 
-    farmController = await (
-      await upgrades.deployProxy(
-        (await ethers.getContractFactory("FarmController")).connect(owner),
-        [rewardToken.address],
-        {
-          initializer: "initialize(address)",
-        },
-      )
-    ).deployed();
-
+    const contrFactory = await ethers.getContractFactory("FarmController");
+    farmController = await contrFactory.deploy(rewardToken.address);
+    await farmController.deployed();
+    
     await farmController.addFarm(stakeToken.address, { gasLimit: 2000000});
 
     const farmAddr = await farmController.getFarm(0);
