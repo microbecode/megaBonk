@@ -60,11 +60,13 @@ export function StakeElem(props : Props) {
           {isStaking ? 'Stake' : 'Unstake'} {stakeTokenDisplayName}
         </Col>
       </Row>
+      <Row>&nbsp;</Row>
       <Row>
         <Col>
         {isStaking ? 'Balance' : 'Staked balance'}: {balance ? format(balance): 0 }
         </Col>
       </Row>
+      <Row>&nbsp;</Row>
       <Form onSubmit={() => {}} className="form-group">
         <Row>   
         <Col>   
@@ -105,6 +107,7 @@ export function StakeElem(props : Props) {
       {isStaking && 
       <>
         <Row>Your {stakeTokenDisplayName} rewards: {format(earnedBalance)}</Row>
+        <Row>&nbsp;</Row>
         <Row>
         <Button
             variant="primary-outline"

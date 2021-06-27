@@ -9,7 +9,7 @@ let farm2StakeAddr = "0x0f6a0e93a471db618e2ec4aced1daa3c825b04f2"; // LP token i
 let farmRewardAddr = "0xdAd35387c2212f4E7d869102bBF881adB2915dCB"; // mBonk in mainnet
 let minterAddr = "0xaC25E9CD6472b4D723464b468A130B132d290221" // NFT minter in mainnet
 const tenTokens = ethers.utils.parseUnits("10", 18);
-let farmTotalRewardAmount = tenTokens;
+let farmTotalRewardAmount = ethers.utils.parseUnits("400000", 18);;
 
 // This is a script for deploying your contracts. You can adapt it to deploy
 // yours, or create new ones.
